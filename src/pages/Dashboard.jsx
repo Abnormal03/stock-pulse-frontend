@@ -4,12 +4,19 @@ import Portfolio from "../components/dashboard/Portfolio";
 
 import useDashboard from "../hooks/useDashboard";
 
-const Dashboard = () => {
+const Dashboard = ({setBalance}) => {
   const dashboard = useDashboard();
+  const {userBalance} = dashboard;
+  setBalance(userBalance);
   return (
     <div className="bg-dark-bg h-fit grid grid-cols-1 lg:grid-cols-3 p-5 gap-10">
       <Chart dashboard={dashboard} />
+      <div>
+
       <Trade dashboard={dashboard} />
+      {/* the watchlist goes here... */}
+      <div className=""></div>
+      </div>
       <Portfolio dashboard={dashboard} />
     </div>
   );

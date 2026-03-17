@@ -6,6 +6,12 @@ export default function useDashboard() {
   const [data, setData] = useState();
   const [chartLoading, setChartLoading] = useState(null);
 
+  //balance...
+  const [userBalance, setUserBalance] = useState(null);
+
+  //tracking update in the buy or sell of the stocks....
+  const [portfolioTrigger, setPOrtfolioTrigger] = useState(0);
+
   //portfolio...
   const [portfolioLoading, setPortfolioLoading] = useState(null);
   const [portError, setPortError] = useState(null);
@@ -69,11 +75,13 @@ export default function useDashboard() {
         return false;
       }
 
+      console.log(currentPrice)
+      
       if (amount <= 0) {
         setError("invalid amount!");
         return false;
       }
-
+      
       setIsLoading(true);
       setError(null);
       try {
@@ -93,6 +101,7 @@ export default function useDashboard() {
         const transaction = await response.json();
         if (transaction && transaction._id) {
           setIsLoading(false);
+          setPOrtfolioTrigger((prev)=>prev+1);
           return true;
         } else {
           setIsLoading(false);
@@ -137,6 +146,7 @@ export default function useDashboard() {
 
         if (transaction && transaction._id) {
           setIsLoading(false);
+          setPOrtfolioTrigger((prev)=>prev+1);
           return true;
         } else {
           setError(transaction.error || "something went wrong.");
@@ -166,12 +176,15 @@ export default function useDashboard() {
         },
       });
 
-      const portfolio = await response.json();
+      const json = await response.json();
+      
 
       if (!response.ok) {
         setPortError(response.error);
         return null;
       }
+      const {portfolio, balance} = json;
+      setUserBalance(balance);
       const formatedPortfolio = await Promise.all(
         portfolio.map(async (asset) => {
           try {
@@ -180,12 +193,12 @@ export default function useDashboard() {
             );
             const priceData = await priceRes.json();
             const currentPrice = priceData[0]?.price || 0;
-    
+            
             return {
               ...asset,
               currentPrice: currentPrice,
               equityValue: currentPrice * asset.quantity,
-              PL: (currentPrice - asset.avgPrice) * asset.quantity,
+              PL: ((currentPrice - asset.avgPrice) * asset.quantity),
             };
           } catch (err) {
             return { ...asset, currentPrice: 0, equityValue: 0, PL: 0 };
@@ -193,6 +206,7 @@ export default function useDashboard() {
         }),
       );
 
+      setUserBalance(balance);
       return formatedPortfolio;
     } catch (error) {
       setPortError(error.error);
@@ -213,5 +227,7 @@ export default function useDashboard() {
     data,
     isLoading,
     error,
+    portfolioTrigger,
+    userBalance
   };
 }

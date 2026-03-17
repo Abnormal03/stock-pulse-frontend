@@ -1,17 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "./NavBar";
 import stockpulse from "../../assets/Images/stock-pulse (2).png";
 import {
-  MdOutlineWbSunny,
-  MdOutlineNightlightRound,
   MdAccountCircle,
 } from "react-icons/md";
 import { FaAngleDown } from "react-icons/fa";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { IoIosLogOut } from "react-icons/io";
+import useLogout from "../../hooks/useLogout";
+import { useNavigate } from "react-router";
 
-const Header = () => {
+const Header = ({balance}) => {
   const {state} = useAuthContext();
-  const {username, email} = state.user;
+  const navigate = useNavigate();
+
+  const {logout} = useLogout();
+
+  const [showDetail, setShowDetail] = useState(false);
+
+  const {username, email} = state.user || {};
+
+  if (!state.user) return null;
+
+  const handleLogout = ()=>{
+    const confimed = window.confirm('do you want to logout?');
+    if (confimed) {
+      logout();
+      navigate('/');
+    }
+  }
+  
   return (
     <div className="bg-dark-bg sticky w-full px-5">
       <div className="w-full rounded-3xl h-20 bg-surface flex items-center justify-between pr-5">
@@ -24,24 +42,28 @@ const Header = () => {
         <NavBar />
 
         <div className="flex gap-2">
-          <div className="bg-dark-bg p-2 rounded-lg flex gap-2 items-center ">
-            <div className="rounded-lg p-1.5">
-              <MdOutlineWbSunny className="text-2xl text-text-main" />
-            </div>
-            <div className="rounded-lg bg-active-icon p-1.5">
-              <MdOutlineNightlightRound className="text-2xl text-white " />
-            </div>
+          <div className="bg-dark-bg text-white p-2 rounded-lg flex gap-2 items-center ">
+            <p className="text-pulse-green">Balance: ${balance?.toFixed(2)}</p>
           </div>
-          <div className="rounded-lg p-1.5 bg-secondary-bg flex items-center text-text-main gap-2">
+          {/* account */}
+          <div className="rounded-lg p-1.5 bg-secondary-bg flex items-center text-text-main gap-2 relative">
             <MdAccountCircle className="text-4xl text-text-main" />
             <div className="text-sm">
               <p>{email}</p>
               <p>{username}</p>
             </div>
-            <FaAngleDown className="text-lg" />
+            <FaAngleDown className="text-lg" onClick={()=>setShowDetail(!showDetail)}/>
+
           </div>
         </div>
       </div>
+              {showDetail && ( <div className="absolute flex flex-col px-5 gap-2 py-2  bg-secondary-bg text-text-main rounded-sm right-10" onMouseLeave={()=>setShowDetail(false)}>
+                <p className="text-text-dim">Account</p>
+                <p>Username: {username}</p>
+                <p>Email: {email}</p>
+                <p>Balance: ${balance?.toFixed(2)}</p>
+                <p className="hover:cursor-pointer flex items-center gap-2" onClick={handleLogout}>Logout <IoIosLogOut /></p>
+              </div> )}     
     </div>
   );
 };

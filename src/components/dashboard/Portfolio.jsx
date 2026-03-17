@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const Portfolio = ({ dashboard }) => {
   const [assets, setAssets] = useState(null);
-  const { getPortfolio, portfolioLoading, portError } = dashboard;
+  const { getChart,getPortfolio, portfolioTrigger,portfolioLoading, portError } = dashboard;
 
   useEffect(() => {
     const fetchPortfolio = async () => {
@@ -15,7 +15,7 @@ const Portfolio = ({ dashboard }) => {
     if (portError) {
       setAssets([]);
     }
-  }, [getPortfolio]);
+  }, [getPortfolio, portfolioTrigger]);
 
   if (portfolioLoading) return <div>Loading...</div>;
 
@@ -30,13 +30,14 @@ const Portfolio = ({ dashboard }) => {
         <h1>CURRENT PRICE</h1>
         <h1>TODAYS P&L</h1>
       </div>
-      {!assets ? (
+      {assets && assets.length===0 ? (
         <div className="items-start justify-center flex">no assets...</div>
-      ) : (
+      ) : (assets &&
         assets.map((asset) => (
           <div
             key={asset.avgPrice}
             className="grid grid-cols-6 text-text-main bg-secondary-bg max-h-10 items-center justify-around w-full pl-15 py-1.5"
+            onClick={()=>{getChart(asset.symbol)}}
           >
             <p>{asset.symbol}</p>
             <p>{asset.quantity}</p>
