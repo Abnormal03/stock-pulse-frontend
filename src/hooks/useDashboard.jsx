@@ -1,10 +1,14 @@
 import React, { useCallback, useRef, useState, useEffect } from "react";
+import { RiSpotifyFill } from "react-icons/ri";
 
 export default function useDashboard() {
   const [isLoading, setIsLoading] = useState(null);
   const [error, setError] = useState(null);
   const [data, setData] = useState();
   const [chartLoading, setChartLoading] = useState(null);
+
+  //tracking watchlist...
+  const [myWatchlists, setMyWatchlists] = useState([]);
 
   //balance...
   const [userBalance, setUserBalance] = useState(null);
@@ -62,7 +66,7 @@ export default function useDashboard() {
         setData([]);
       }
     } catch (error) {
-      setError(error.error);
+      setError(error.message);
     } finally {
       setChartLoading(false);
     }
@@ -109,7 +113,7 @@ export default function useDashboard() {
           return false;
         }
       } catch (error) {
-        setError(error.error);
+        setError(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -154,7 +158,7 @@ export default function useDashboard() {
           return false;
         }
       } catch (error) {
-        setError(error.error);
+        setError(error.message);
         return false;
       } finally {
         setIsLoading(false);
@@ -209,18 +213,133 @@ export default function useDashboard() {
       setUserBalance(balance);
       return formatedPortfolio;
     } catch (error) {
-      setPortError(error.error);
+      setPortError(error.message);
       return false;
     } finally {
       setPortfolioLoading(false);
     }
   }, []);
 
+const getMyWatchlist =useCallback(async ()=>{
+  setIsLoading(true);
+  setError(null)
+  try {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const response = await fetch(`/api/dashboard/watchlist`,{
+      headers:{
+        'Content-Type':'application/json',
+        authorization: `Bearer ${user? user.token : ""}`
+      }
+    })
+    const watchlist = await response.json();
+
+    console.log(response);
+    if (!response.ok) {
+      setError(watchlist.error);
+      setMyWatchlists([]);
+      return false;
+    }
+    setMyWatchlists(watchlist.myWatchlist);
+    return true;
+    
+  } catch (error) {
+    setMyWatchlists([]);
+    setError(error.message);
+    return [];
+  }finally{
+    setIsLoading(false);
+  }
+},[])
+
+const addWatch = useCallback(async (symbol)=>{
+  setIsLoading(true);
+  setPortError(false);
+  try {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const response = await fetch('/api/dashboard/watchlist/addwatch',{
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json',
+        authorization: `Bearer ${user? user.token :""}`
+      },
+      body:JSON.stringify({
+        symbol
+      })
+    })
+
+    const json = await response.json();
+    
+    if (!response.ok) {
+      setPortError(json.error || "Failed to add to watchlist");
+      return false;
+    }
+    if (json.watch) {
+      setMyWatchlists((prev) => [...prev, json.watch]);
+    }
+    return true;
+
+  } catch (error) {
+    setPortError(error.message);
+    return false;
+  }finally{
+    setIsLoading(false);
+  }
+},[])
+
+const removeWatch = useCallback(async (_id)=>{
+  setIsLoading(true);
+  setError(null);
+  try {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const response = await fetch(`/api/dashboard/watchlist/delete/${_id}`,{
+      method: 'DELETE',
+      headers:{
+        authorization: `Bearer ${user? user.token : ""}`,
+      }
+    })
+
+    const json = await response.json();
+    if (!response.ok) {
+      setError(json.error);
+      return false;
+    }
+    setMyWatchlists((prev)=>prev.filter(watch=>watch._id!==_id));
+    return json.removed;
+  } catch (error) {
+    setError(error.message);
+    return false;
+  }finally{
+    setIsLoading(false);
+  }
+},[])
+
+
+const getDetail = async (asset)=>{
+  try {
+    const priceRes = await fetch(`https://financialmodelingprep.com/stable/quote-short?symbol=${asset.symbol}&apikey=${import.meta.env.VITE_MARKET_API}`,);
+    const priceData = await priceRes.json();
+    const currentPrice = priceData[0]?.price || 0;
+
+    return {
+              ...asset,
+              currentPrice: currentPrice,
+              equityValue: currentPrice * asset.quantity,
+              PL: ((currentPrice - asset.avgPrice) * asset.quantity),
+            };
+
+  } catch (error) {
+    return { ...asset, currentPrice: 0, equityValue: 0, PL: 0 };
+  }
+}
+
   return {
     getChart,
     addSellTransaction,
     addBuyTransaction,
     getPortfolio,
+    getMyWatchlist,
+    removeWatch,
+    addWatch,
     portError,
     portfolioLoading,
     chartLoading,
@@ -228,6 +347,8 @@ export default function useDashboard() {
     isLoading,
     error,
     portfolioTrigger,
-    userBalance
+    setPortError,
+    userBalance,
+    myWatchlists
   };
 }

@@ -108,6 +108,7 @@ const SignupPage = () => {
             className="rounded-sm bg-blue-500 px-5 py-2 "
             disabled={isLoading}
           />
+          {isLoading && <p className="text-text-main">loading....</p>}
           {error && <p className="text-red-400">{error}</p>}
           <p className="bg-clip-text bg-linear-to-l from-pulse-green to-bear-red text-transparent">
             you are a member?{" "}

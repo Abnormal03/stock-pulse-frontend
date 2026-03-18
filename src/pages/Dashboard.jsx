@@ -3,6 +3,8 @@ import Trade from "../components/dashboard/Trade";
 import Portfolio from "../components/dashboard/Portfolio";
 
 import useDashboard from "../hooks/useDashboard";
+import MyWatchlist from "../components/dashboard/MyWatchlist";
+import { useEffect } from "react";
 
 const Dashboard = ({setBalance}) => {
   const dashboard = useDashboard();
@@ -15,7 +17,7 @@ const Dashboard = ({setBalance}) => {
 
       <Trade dashboard={dashboard} />
       {/* the watchlist goes here... */}
-      <div className=""></div>
+      <MyWatchlist dashboard={dashboard} />
       </div>
       <Portfolio dashboard={dashboard} />
     </div>
