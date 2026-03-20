@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import Login from "./pages/loginPage";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import PortfolioPage from "./pages/PortfolioPage";
 
 const RenderHeader = ({state, userBalance})=>{
   
@@ -41,7 +42,7 @@ function App() {
           path="/dashboard"
           element={state.user ? <Dashboard setBalance={setBalance} /> : <Navigate to={"/"} />}
         />
-        <Route path="/portfolio" />
+        <Route path="/portfolio" element={state.user ? <PortfolioPage /> : <Navigate to={"/"}/>} />
       </Routes>
     </BrowserRouter>
   );
