@@ -10,65 +10,65 @@ import { IoIosLogOut } from "react-icons/io";
 import useLogout from "../../hooks/useLogout";
 import { useNavigate } from "react-router";
 
-const Header = ({balance}) => {
-  const {state} = useAuthContext();
+const Header = ({ balance }) => {
+  const { state } = useAuthContext();
   const navigate = useNavigate();
 
-  const {logout} = useLogout();
+  const { logout } = useLogout();
 
   const [showDetail, setShowDetail] = useState(false);
 
-  const {username, email} = state.user || {};
+  const { username, email } = state.user || {};
   const [userBalance, setUserBalance] = useState(null);
 
   if (!state.user) return null;
 
-  useEffect(()=>{
+  useEffect(() => {
     setUserBalance(balance)
-  },[balance])
+  }, [balance])
 
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     const confimed = window.confirm('do you want to logout?');
     if (confimed) {
       logout();
       navigate('/');
     }
   }
-  
+
   return (
-    <div className="bg-dark-bg sticky w-full px-5">
-      <div className="w-full rounded-3xl h-20 bg-surface flex items-center justify-between pr-5">
+    <div className="bg-dark-bg sticky w-full px-5 ">
+      <div className="w-full rounded-3xl h-20 bg-secondary-bg flex items-center justify-between lg:pr-5">
         <img
           src={stockpulse}
           width={300}
           alt="logo"
-          className="brightness-0 invert"
+          className="lg invert"
         />
         <NavBar />
 
         <div className="flex gap-2">
-          <div className="bg-dark-bg text-white p-2 rounded-lg flex gap-2 items-center ">
+          <div className="bg-dark-bg hidden lg:flex text-white p-2 rounded-lg gap-2 items-center">
             <p className="text-pulse-green">Balance: ${userBalance?.toFixed(2)}</p>
           </div>
           {/* account */}
-          <div className="rounded-lg p-1.5 bg-secondary-bg flex items-center text-text-main gap-2 relative">
-            <MdAccountCircle className="text-4xl text-text-main" />
-            <div className="text-sm">
+          <div className="rounded-lg p-1.5 bg-secondary-bg flex items-center text-text-main gap-2 relative ">
+            <MdAccountCircle className="text-4xl text-text-main " onClick={() => setShowDetail(!showDetail)} />
+            <div className="text-sm hidden lg:block ">
               <p>{email}</p>
               <p>{username}</p>
             </div>
-            <FaAngleDown className="text-lg" onClick={()=>setShowDetail(!showDetail)}/>
+            <FaAngleDown className="text-lg hidden lg:block" onClick={() => setShowDetail(!showDetail)} />
 
           </div>
         </div>
       </div>
-              {showDetail && ( <div className="absolute flex flex-col px-5 gap-2 py-2  bg-secondary-bg text-text-main rounded-sm right-10" onMouseLeave={()=>setShowDetail(false)}>
-                <p className="text-text-dim">Account</p>
-                <p>Username: {username}</p>
-                <p>Email: {email}</p>
-                <p>Balance: ${balance?.toFixed(2)}</p>
-                <p className="hover:cursor-pointer flex items-center gap-2" onClick={handleLogout}>Logout <IoIosLogOut /></p>
-              </div> )}     
+      {showDetail && (<div className="absolute flex flex-col px-5 gap-2 py-2  bg-secondary-bg text-text-main rounded-sm right-10" onMouseLeave={() => setShowDetail(false)}>
+        <p className="text-text-dim">Account</p>
+        <p>Username: {username}</p>
+        <p>Email: {email}</p>
+        <p>Balance: ${balance?.toFixed(2)}</p>
+        <p className="hover:cursor-pointer flex items-center gap-2" onClick={handleLogout}>Logout <IoIosLogOut /></p>
+      </div>)}
     </div>
   );
 };

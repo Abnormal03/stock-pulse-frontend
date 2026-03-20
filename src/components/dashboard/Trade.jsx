@@ -37,7 +37,7 @@ const Trade = ({ dashboard }) => {
   }, [successMsg]);
 
   return (
-    <div className="text-text-main lg:max-h-fit pb-5 flex flex-col items-center gap-3 rounded-3xl shadow-sm shadow-text-dim">
+    <div className="text-text-main lg:max-h-fit pb-5 flex flex-col items-center gap-3 rounded-3xl shadow-sm shadow-active-icon">
       <h1 className="text-3xl ">Trade</h1>
       <form className="flex flex-col gap-3 w-full px-10 items-center">
         <label htmlFor="amount" className="self-start ml-13">

@@ -1,6 +1,6 @@
 const CurrentHoldings = ({ portfolio }) => {
   return (
-    <div className='min-h-100 max-h-150'>
+    <div className='min-h-100 lg:max-h-150 lg:w-full w-[90%]'>
       <h1 className='text-text-main mb-5 text-2xl'>Current Holdings</h1>
 
       <div className='flex flex-col gap-2 min-h-100 max-h-150 rounded-lg pt-2 bg-secondary-bg shadow-sm shadow-active-icon overflow-hidden text-text-dim'>

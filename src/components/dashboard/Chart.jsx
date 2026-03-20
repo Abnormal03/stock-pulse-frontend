@@ -51,7 +51,7 @@ const Chart = ({ dashboard }) => {
       </p>
     );
   return (
-    <div className="text-text-main items-center justify-center p-5 rounded-sm shadow-sm shadow-text-dim col-span-full min-w-90 min-h-50 overflow-hidden lg:col-span-2 m-0  h-fit lg:h-150 ">
+    <div className="text-text-main items-center justify-center p-5 rounded-sm shadow-sm shadow-active-icon col-span-full min-w-90 min-h-50 overflow-hidden lg:col-span-2 m-0  h-fit lg:h-150 ">
       {chartLoading ? (
         <p>
           Loading chart... <data value=""></data>
