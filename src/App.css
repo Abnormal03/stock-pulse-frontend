@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  /* This defines your custom colors for Tailwind v4 */
+  --color-dark-bg: #0b0e14;
+  --color-secondary-bg: #131B2E;
+  --color-surface: #1C2025;
+  --color-pulse-green: #00f5a0;
+  --color-bear-red: #ff3b3f;
+  --color-text-main: #f0f6fc;
+  --color-text-dim: #8b949e;
+  --color-floats: #213C51;
+  --color-active-icon: #4849DF;
+
+  /* You can also add custom animations or gradients here */
+  --background-image-glass-gradient: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0));
+}
