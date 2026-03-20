@@ -275,6 +275,7 @@ const addWatch = useCallback(async (symbol)=>{
     }
     if (json.watch) {
       setMyWatchlists((prev) => [...prev, json.watch]);
+      getMyWatchlist();
     }
     return true;
 

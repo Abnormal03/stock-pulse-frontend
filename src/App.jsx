@@ -28,8 +28,6 @@ function App() {
     <BrowserRouter>
         <RenderHeader state={state} userBalance={balance} />
       <Routes>
-
-
         <Route
           path="/login"
           element={!state.user ? <Login /> : <Navigate to="/dashboard" />}
@@ -43,6 +41,7 @@ function App() {
           path="/dashboard"
           element={state.user ? <Dashboard setBalance={setBalance} /> : <Navigate to={"/"} />}
         />
+        <Route path="/portfolio" />
       </Routes>
     </BrowserRouter>
   );
