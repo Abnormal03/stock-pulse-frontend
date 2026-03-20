@@ -78,8 +78,6 @@ export default function useDashboard() {
         setError("could not resolve stock!");
         return false;
       }
-
-      console.log(currentPrice)
       
       if (amount <= 0) {
         setError("invalid amount!");
@@ -233,7 +231,6 @@ const getMyWatchlist =useCallback(async ()=>{
     })
     const watchlist = await response.json();
 
-    console.log(response);
     if (!response.ok) {
       setError(watchlist.error);
       setMyWatchlists([]);

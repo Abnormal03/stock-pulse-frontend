@@ -37,7 +37,7 @@ const Trade = ({ dashboard }) => {
   }, [successMsg]);
 
   return (
-    <div className="text-text-main lg:max-h-fit pb-5 flex  flex-col items-center gap-3 rounded-3xl shadow-sm shadow-text-dim">
+    <div className="text-text-main lg:max-h-fit pb-5 flex flex-col items-center gap-3 rounded-3xl shadow-sm shadow-text-dim">
       <h1 className="text-3xl ">Trade</h1>
       <form className="flex flex-col gap-3 w-full px-10 items-center">
         <label htmlFor="amount" className="self-start ml-13">
@@ -58,7 +58,7 @@ const Trade = ({ dashboard }) => {
           Available: {"0.0"}
         </label>
 
-        <div className="flex  px-10 w-full content-around items-center justify-around">
+        <div className="flex  px-10 gap-5 w-full content-around items-center justify-around">
           <input
             type="button"
             value="Buy"
