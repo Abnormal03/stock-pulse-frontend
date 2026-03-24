@@ -78,12 +78,12 @@ export default function useDashboard() {
         setError("could not resolve stock!");
         return false;
       }
-      
+
       if (amount <= 0) {
         setError("invalid amount!");
         return false;
       }
-      
+
       setIsLoading(true);
       setError(null);
       try {
@@ -103,7 +103,7 @@ export default function useDashboard() {
         const transaction = await response.json();
         if (transaction && transaction._id) {
           setIsLoading(false);
-          setPOrtfolioTrigger((prev)=>prev+1);
+          setPOrtfolioTrigger((prev) => prev + 1);
           return true;
         } else {
           setIsLoading(false);
@@ -148,7 +148,7 @@ export default function useDashboard() {
 
         if (transaction && transaction._id) {
           setIsLoading(false);
-          setPOrtfolioTrigger((prev)=>prev+1);
+          setPOrtfolioTrigger((prev) => prev + 1);
           return true;
         } else {
           setError(transaction.error || "something went wrong.");
@@ -179,13 +179,13 @@ export default function useDashboard() {
       });
 
       const json = await response.json();
-      
+
 
       if (!response.ok) {
         setPortError(response.error);
         return null;
       }
-      const {portfolio, balance} = json;
+      const { portfolio, balance } = json;
       setUserBalance(balance);
       const formatedPortfolio = await Promise.all(
         portfolio.map(async (asset) => {
@@ -195,7 +195,7 @@ export default function useDashboard() {
             );
             const priceData = await priceRes.json();
             const currentPrice = priceData[0]?.price || 0;
-            
+
             return {
               ...asset,
               currentPrice: currentPrice,
@@ -218,117 +218,117 @@ export default function useDashboard() {
     }
   }, []);
 
-const getMyWatchlist =useCallback(async ()=>{
-  setIsLoading(true);
-  setError(null)
-  try {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const response = await fetch(`/api/dashboard/watchlist`,{
-      headers:{
-        'Content-Type':'application/json',
-        authorization: `Bearer ${user? user.token : ""}`
-      }
-    })
-    const watchlist = await response.json();
-
-    if (!response.ok) {
-      setError(watchlist.error);
-      setMyWatchlists([]);
-      return false;
-    }
-    setMyWatchlists(watchlist.myWatchlist);
-    return true;
-    
-  } catch (error) {
-    setMyWatchlists([]);
-    setError(error.message);
-    return [];
-  }finally{
-    setIsLoading(false);
-  }
-},[])
-
-const addWatch = useCallback(async (symbol)=>{
-  setIsLoading(true);
-  setPortError(false);
-  try {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const response = await fetch('/api/dashboard/watchlist/addwatch',{
-      method: 'POST',
-      headers:{
-        'Content-Type':'application/json',
-        authorization: `Bearer ${user? user.token :""}`
-      },
-      body:JSON.stringify({
-        symbol
+  const getMyWatchlist = useCallback(async () => {
+    setIsLoading(true);
+    setError(null)
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const response = await fetch(`/api/dashboard/watchlist`, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${user ? user.token : ""}`
+        }
       })
-    })
+      const watchlist = await response.json();
 
-    const json = await response.json();
-    
-    if (!response.ok) {
-      setPortError(json.error || "Failed to add to watchlist");
-      return false;
-    }
-    if (json.watch) {
-      setMyWatchlists((prev) => [...prev, json.watch]);
-      getMyWatchlist();
-    }
-    return true;
-
-  } catch (error) {
-    setPortError(error.message);
-    return false;
-  }finally{
-    setIsLoading(false);
-  }
-},[])
-
-const removeWatch = useCallback(async (_id)=>{
-  setIsLoading(true);
-  setError(null);
-  try {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const response = await fetch(`/api/dashboard/watchlist/delete/${_id}`,{
-      method: 'DELETE',
-      headers:{
-        authorization: `Bearer ${user? user.token : ""}`,
+      if (!response.ok) {
+        setError(watchlist.error);
+        setMyWatchlists([]);
+        return false;
       }
-    })
+      setMyWatchlists(watchlist.myWatchlist);
+      return true;
 
-    const json = await response.json();
-    if (!response.ok) {
-      setError(json.error);
-      return false;
+    } catch (error) {
+      setMyWatchlists([]);
+      setError(error.message);
+      return [];
+    } finally {
+      setIsLoading(false);
     }
-    setMyWatchlists((prev)=>prev.filter(watch=>watch._id!==_id));
-    return json.removed;
-  } catch (error) {
-    setError(error.message);
-    return false;
-  }finally{
-    setIsLoading(false);
-  }
-},[])
+  }, [])
+
+  const addWatch = useCallback(async (symbol) => {
+    setIsLoading(true);
+    setPortError(false);
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const response = await fetch('/api/dashboard/watchlist/addwatch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${user ? user.token : ""}`
+        },
+        body: JSON.stringify({
+          symbol
+        })
+      })
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        setPortError(json.error || "Failed to add to watchlist");
+        return false;
+      }
+      if (json.watch) {
+        setMyWatchlists((prev) => [...prev, json.watch]);
+        getMyWatchlist();
+      }
+      return true;
+
+    } catch (error) {
+      setPortError(error.message);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [])
+
+  const removeWatch = useCallback(async (_id) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const response = await fetch(`/api/dashboard/watchlist/delete/${_id}`, {
+        method: 'DELETE',
+        headers: {
+          authorization: `Bearer ${user ? user.token : ""}`,
+        }
+      })
+
+      const json = await response.json();
+      if (!response.ok) {
+        setError(json.error);
+        return false;
+      }
+      setMyWatchlists((prev) => prev.filter(watch => watch._id !== _id));
+      return json.removed;
+    } catch (error) {
+      setError(error.message);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [])
 
 
-const getDetail = async (asset)=>{
-  try {
-    const priceRes = await fetch(`https://financialmodelingprep.com/stable/quote-short?symbol=${asset.symbol}&apikey=${import.meta.env.VITE_MARKET_API}`,);
-    const priceData = await priceRes.json();
-    const currentPrice = priceData[0]?.price || 0;
+  // const getDetail = async (asset)=>{
+  //   try {
+  //     const priceRes = await fetch(`https://financialmodelingprep.com/stable/quote-short?symbol=${asset.symbol}&apikey=${import.meta.env.VITE_MARKET_API}`,);
+  //     const priceData = await priceRes.json();
+  //     const currentPrice = priceData[0]?.price || 0;
 
-    return {
-              ...asset,
-              currentPrice: currentPrice,
-              equityValue: currentPrice * asset.quantity,
-              PL: ((currentPrice - asset.avgPrice) * asset.quantity),
-            };
+  //     return {
+  //               ...asset,
+  //               currentPrice: currentPrice,
+  //               equityValue: currentPrice * asset.quantity,
+  //               PL: ((currentPrice - asset.avgPrice) * asset.quantity),
+  //             };
 
-  } catch (error) {
-    return { ...asset, currentPrice: 0, equityValue: 0, PL: 0 };
-  }
-}
+  //   } catch (error) {
+  //     return { ...asset, currentPrice: 0, equityValue: 0, PL: 0 };
+  //   }
+  // }
 
   return {
     getChart,
