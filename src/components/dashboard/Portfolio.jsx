@@ -5,7 +5,7 @@ const Portfolio = ({ dashboard }) => {
   const [assets, setAssets] = useState(null);
   const [displayError, setDisplayError] = useState(false);
 
-  const { getChart, getPortfolio, addWatch, portfolioTrigger, portfolioLoading, portError, setPortError } = dashboard;
+  const { setCurrentSymbol, getPortfolio, addWatch, portfolioTrigger, portfolioLoading, portError, setPortError } = dashboard;
 
   useEffect(() => {
     const fetchPortfolio = async () => {
@@ -58,7 +58,7 @@ const Portfolio = ({ dashboard }) => {
           <div
             key={asset.symbol}
             className="grid grid-cols-7 text-text-main bg-secondary-bg max-h-10 items-center justify-around w-full pl-15 py-1.5"
-            onClick={() => { getChart(asset.symbol) }}
+            onClick={() => { setCurrentSymbol(asset.symbol) }}
           >
             <p>{asset.symbol}</p>
             <p>{asset.quantity}</p>

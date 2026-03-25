@@ -36,17 +36,16 @@ const Header = ({ balance }) => {
   }
 
   return (
-    <div className="bg-dark-bg sticky w-full px-5 ">
+    <div className="bg-dark-bg sticky w-full md:px-5 ">
       <div className="w-full rounded-3xl h-20 bg-secondary-bg flex items-center justify-between lg:pr-5">
         <img
           src={stockpulse}
-          width={300}
           alt="logo"
-          className="lg invert"
+          className="w-50 md:w-80 invert"
         />
         <NavBar />
 
-        <div className="flex gap-2">
+        <div className="flex gap-0 md:gap-2">
           <div className="bg-dark-bg hidden lg:flex text-white p-2 rounded-lg gap-2 items-center">
             <p className="text-pulse-green">Balance: ${userBalance?.toFixed(2)}</p>
           </div>

@@ -27,7 +27,7 @@ const CurrentHoldings = ({ portfolio, portError }) => {
           <h1 className='hidden lg:block'>CURRENT PRICE</h1>
           <h1>TODAYS P&L</h1>
         </div>
-        {(portfolio && portfolio?.length) ? "no assets to display " : portfolio.map(stock => (
+        {(portfolio && portfolio?.length === 0) ? "no assets to display " : portfolio.map(stock => (
           <div
             key={stock.symbol}
             className="flex text-text-main bg-dark-bg max-h-10 items-center justify-between w-full px-3 py-2 hover:bg-secondary-bg"

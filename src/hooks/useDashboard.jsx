@@ -1,7 +1,10 @@
-import React, { useCallback, useRef, useState, useEffect } from "react";
+import React, { useCallback, useRef, useState, useEffect, useContext } from "react";
 import { RiSpotifyFill } from "react-icons/ri";
+import { AuthContext } from "../context/authContext";
+import { useAuthContext } from "./useAuthContext";
 
 export default function useDashboard() {
+  const { dispatch } = useAuthContext();
   const [isLoading, setIsLoading] = useState(null);
   const [error, setError] = useState(null);
   const [data, setData] = useState();
@@ -25,6 +28,9 @@ export default function useDashboard() {
   const [currentSymbol, setCurrentSymbol] = useState(null);
   useEffect(() => {
     if (error) {
+      if (error === "jwt expired") {
+        dispatch({ type: 'LOGOUT-USER' })
+      }
       const timer = setTimeout(() => setError(null), 5000);
       return () => clearTimeout(timer); //cleaning up the timeout...
     }
@@ -70,7 +76,7 @@ export default function useDashboard() {
     } finally {
       setChartLoading(false);
     }
-  }, []);
+  }, [currentSymbol]);
 
   const addBuyTransaction = useCallback(
     async (amount) => {
@@ -208,6 +214,7 @@ export default function useDashboard() {
         }),
       );
 
+      setCurrentSymbol(formatedPortfolio[0].symbol);
       setUserBalance(balance);
       return formatedPortfolio;
     } catch (error) {
@@ -347,6 +354,8 @@ export default function useDashboard() {
     portfolioTrigger,
     setPortError,
     userBalance,
-    myWatchlists
+    myWatchlists,
+    currentSymbol,
+    setCurrentSymbol
   };
 }

@@ -9,6 +9,7 @@ import Login from "./pages/loginPage";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import PortfolioPage from "./pages/PortfolioPage";
 import useDashboard from "./hooks/useDashboard";
+import Market from "./pages/Market";
 
 const RenderHeader = ({ state, userBalance }) => {
 
@@ -49,6 +50,8 @@ function App() {
           element={state.user ? <Dashboard useDashboard={dashboard} /> : <Navigate to={"/"} />}
         />
         <Route path="/portfolio" element={state.user ? <PortfolioPage userBalance={userBalance} useDashboard={dashboard} /> : <Navigate to={"/"} />} />
+
+        <Route path="/market" element={state.user ? <Market dashboard={dashboard} /> : <Navigate to={"/"} />} />
       </Routes>
     </BrowserRouter>
   );

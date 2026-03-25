@@ -2,12 +2,17 @@ import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
 const Chart = ({ dashboard }) => {
-  const { getChart, data, chartLoading, error } = dashboard;
+  const { getChart, data, chartLoading, error, currentSymbol } = dashboard;
   const [displayError, setDisplayError] = useState(false);
 
   useEffect(() => {
-    getChart("AAPL");
-  }, []);
+    console.log(currentSymbol)
+    if (currentSymbol) {
+      getChart(currentSymbol);
+    } else {
+      getChart('AALP');
+    }
+  }, [currentSymbol]);
 
   const series = [
     {
@@ -36,7 +41,7 @@ const Chart = ({ dashboard }) => {
       foreColor: "#ffff",
     },
     title: {
-      text: "AAPL Stock Price",
+      text: `${currentSymbol} Stock Price`,
       align: "left",
     },
     xaxis: {
@@ -49,7 +54,7 @@ const Chart = ({ dashboard }) => {
     },
     tooltip: {
       enabled: true,
-      theme: "dark", // This will turn the background dark and text white
+      theme: "dark",
       style: {
         fontSize: "12px",
         fontFamily: undefined,
