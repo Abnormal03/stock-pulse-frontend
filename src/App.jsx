@@ -9,6 +9,7 @@ import Login from "./pages/loginPage";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import PortfolioPage from "./pages/PortfolioPage";
 import useDashboard from "./hooks/useDashboard";
+import Transactions from "./pages/Transactions";
 
 const RenderHeader = ({ state, userBalance }) => {
 
@@ -49,6 +50,9 @@ function App() {
           element={state.user ? <Dashboard useDashboard={dashboard} /> : <Navigate to={"/"} />}
         />
         <Route path="/portfolio" element={state.user ? <PortfolioPage userBalance={userBalance} useDashboard={dashboard} /> : <Navigate to={"/"} />} />
+
+
+        <Route path="/transactions" element={state.user ? <Transactions /> : <Navigate to={"/"} />} />
       </Routes>
     </BrowserRouter>
   );
