@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { MarketContext } from './marketContext'
 
 const Reducer = (state, action) => {
@@ -19,6 +19,17 @@ export const MarketContextProvider = ({ children }) => {
     const [isLoading, setIsloading] = useState(null);
     const [error, setError] = useState(null);
 
+    useEffect(() => {
+        let timeOutId;
+        if (error) {
+            timeOutId = setTimeout(() => {
+                setError(null);
+            }, 5000);
+        }
+
+        return () => { clearTimeout(timeOutId) }
+    }, [error])
+
     const getTopGainer = async () => {
         setIsloading(true);
         setError(null);
@@ -34,7 +45,6 @@ export const MarketContextProvider = ({ children }) => {
             const topTen = json.symbols?.splice(0, 20);
             dispatch({ type: 'LOAD_STOCKS', payload: topTen });
         } catch (error) {
-            console.log(error);
             setError('unable to get stock information...');
             dispatch({ type: 'LOAD_STOCKS', payload: [] });
         } finally {
@@ -51,7 +61,6 @@ export const MarketContextProvider = ({ children }) => {
 
             dispatch({ type: "LOAD_STOCKS", payload: json.searchResult })
         } catch (error) {
-            console.log(error);
             setError('unable to get searched stock')
             dispatch({ type: 'LOAD_STOCKS', payload: [] });
         } finally {

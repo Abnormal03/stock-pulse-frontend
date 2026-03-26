@@ -4,15 +4,13 @@ import { CiBookmarkPlus } from "react-icons/ci";
 import { useNavigate } from 'react-router';
 
 const DisplayStocks = ({ dashboard }) => {
-    const { state, getTopGainer } = useMarket();
+    const { state, getTopGainer, isLoading, error } = useMarket();
     const [stockList, setStockList] = useState([]);
     const { setCurrentSymbol } = dashboard;
-    const [loaded, setloaded] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         if (state.marketStocks) {
-            console.log(state.marketStocks);
             setStockList(state.marketStocks);
         }
     }, [state.marketStocks]);
@@ -21,15 +19,10 @@ const DisplayStocks = ({ dashboard }) => {
         getTopGainer();
     }, [])
 
-    useEffect(() => {
-        setloaded(true);
-    }, [setCurrentSymbol])
-
     const handleClick = (symbol) => {
-        if (symbol && loaded) {
-            setCurrentSymbol(symbol);
-            navigate('/dashboard');
-        }
+        if (!symbol) return;
+        setCurrentSymbol(symbol);
+        navigate('/dashboard');
 
     }
     return (
@@ -42,7 +35,7 @@ const DisplayStocks = ({ dashboard }) => {
                 <p className=''>exchange</p>
                 <p className=''></p>
             </div>}
-            {(stockList && stockList.length === 0) ? "NO stocks found..." : (
+            {(!isLoading && stockList.length === 0) ? "NO stocks found..." : (
                 stockList.map((stock, index) => (
                     <div key={index} onClick={() => { handleClick(stock.symbol) }} className={`grid grid-cols-5 md:grid-cols-6 bg-surface hover:bg-transparent cursor-default py-2 rounded-sm ${stock.change >= 0 ? "text-pulse-green" : "text-bear-red"}`}>
                         <p>{stock.symbol}</p>
@@ -50,10 +43,11 @@ const DisplayStocks = ({ dashboard }) => {
                         <p className='hidden md:block'>{stock.name}</p>
                         <p>{(stock.change).toFixed(2)}%</p>
                         <p>{stock.exchange}</p>
-                        <p className='flex items-center justify-end-safe md:justify-center md:text-2xl'><CiBookmarkPlus /></p>
+                        <p className='flex items-center justify-end-safe mr-2 md:mr-0 md:justify-center md:text-2xl text-active-icon'><CiBookmarkPlus /></p>
                     </div>
                 ))
             )}
+            {isLoading && <p>Loading...</p>}
         </div>
     )
 }

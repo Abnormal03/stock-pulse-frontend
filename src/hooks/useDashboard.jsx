@@ -39,6 +39,8 @@ export default function useDashboard() {
   const getChart = useCallback(async (symbol) => {
     setChartLoading(true);
     setError(null);
+    setData([]);
+
     const user = JSON.parse(localStorage.getItem("user"));
     try {
       const response = await fetch("/api/dashboard/chart", {
@@ -68,7 +70,7 @@ export default function useDashboard() {
           setCurrentSymbol(symbol);
         }
       } else {
-        setError(chartData.error || "Something went wrong");
+        setError("Something went wrong while loading the chart.");
         setData([]);
       }
     } catch (error) {
@@ -76,7 +78,7 @@ export default function useDashboard() {
     } finally {
       setChartLoading(false);
     }
-  }, [currentSymbol]);
+  }, []);
 
   const addBuyTransaction = useCallback(
     async (amount) => {
@@ -214,7 +216,9 @@ export default function useDashboard() {
         }),
       );
 
-      setCurrentSymbol(formatedPortfolio[0].symbol);
+      if (!currentSymbol) {
+        setCurrentSymbol(formatedPortfolio[0].symbol);
+      }
       setUserBalance(balance);
       return formatedPortfolio;
     } catch (error) {
