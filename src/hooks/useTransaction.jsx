@@ -29,13 +29,11 @@ export const useTransactions = () => {
             })
 
             if (!response.ok) {
-                console.log(response);
                 setError('error while fetching transactions...')
                 return [];
             }
             const json = await response.json();
 
-            console.log(json)
             return json;
         } catch (error) {
             setError(error.error);

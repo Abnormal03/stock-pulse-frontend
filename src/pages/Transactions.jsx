@@ -24,9 +24,9 @@ const Transactions = () => {
                     <div className='grid grid-cols-4 md:grid-cols-5 min-w-150 bg-active-icon py-2 px-1 rounded-sm'>
                         <p>Symbols</p>
                         <p>Quantity</p>
-                        <p>Avg.Buy/SellPrice</p>
-                        <p className='hidden md:block'>Status</p>
                         <p>Date</p>
+                        <p>Avg.Buy/SellPrice{"($)"}</p>
+                        <p className='hidden md:block'>Status</p>
                     </div>
                 )}
 
@@ -37,13 +37,14 @@ const Transactions = () => {
                                 <div className={`grid grid-cols-4 md:grid-cols-5 min-w-150 ml-1 p-2 bg-surface gap-2`}>
                                     <p>{transaction.symbol}</p>
                                     <p>{transaction.quantity}</p>
-                                    <p>{transaction.priceAtTransaction}</p>
-                                    <p className='hidden md:block'>{transaction.status}</p>
                                     <p>{(transaction.createdAt).split('T')[0]}</p>
+                                    <p>{transaction.priceAtTransaction.toFixed(2)}</p>
+                                    <p className='hidden md:block'>{transaction.status}</p>
                                 </div>
                             </div>
                         ))
                     )}
+                    {isLoading && <p>Loading...</p>}
                 </div>
             </div>
             {error && (
