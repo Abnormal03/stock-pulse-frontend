@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-const CurrentHoldings = ({ portfolio, portError }) => {
+const CurrentHoldings = ({ portfolio, portError, isLoading }) => {
   const [displayError, setDisplayError] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const CurrentHoldings = ({ portfolio, portError }) => {
     <div className='min-h-100 lg:max-h-150 lg:w-full w-[90%]'>
       <h1 className='text-text-main mb-5 text-2xl'>Current Holdings</h1>
 
-      <div className='flex flex-col gap-2 min-h-100 max-h-150 rounded-lg pt-2 bg-secondary-bg shadow-sm shadow-active-icon overflow-hidden text-text-dim'>
+      <div className='flex flex-col gap-2 min-h-100 max-h-150 rounded-lg pt-2 bg-secondary-bg shadow-sm shadow-active-icon overflow-hidden text-text-dim relative'>
         <div className='flex justify-between bg-dark-bg py-2 w-full  px-3'>
           <h1>ASSETS</h1>
           <h1>QUANTITY</h1>
@@ -40,6 +40,12 @@ const CurrentHoldings = ({ portfolio, portError }) => {
             <p className={stock.PL >= 0 ? "text-pulse-green" : "text-bear-red"}>{stock.PL?.toFixed(2)}</p>
           </div>
         ))}
+
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+            <p>Loading Portfolio...</p>
+          </div>
+        )}
 
       </div>
       {displayError && (

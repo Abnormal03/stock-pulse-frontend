@@ -30,7 +30,7 @@ const PortfolioPage = ({ useDashboard, userBalance }) => {
     return (
         <div className='text-text-main mt-2 lg:p-10 lg:min-h-180 h-fit flex flex-col items-center lg:block'>
             <TotalEquityHeader totalEquity={totalEquity} userBalance={userBalance} isLoading={portfolioLoading} openPosition={openPosition} />
-            <CurrentHoldings portfolio={portfolio} portError={portError} />
+            <CurrentHoldings portfolio={portfolio} portError={portError} isLoading={portfolioLoading} />
         </div>
     )
 }
