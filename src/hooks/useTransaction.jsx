@@ -1,31 +1,49 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 export const useTransactions = () => {
-    const [transaction, setTransactions] = useState([]);
-
     const [isLoading, setIsloading] = useState(null);
     const [error, setError] = useState(null);
 
-    const getTransactions = async () => {
+    useEffect(() => {
+        let timeOutId;
+        if (error) {
+            timeOutId = setTimeout(() => {
+                setError(null);
+            }, 5000)
+        }
+
+        return () => clearTimeout(timeOutId);
+    })
+
+    const getTransactions = useCallback(async () => {
         setIsloading(true);
         setError(null)
+        console.log('starting fetching...')
         try {
-            const user = JSON.parse(localStorage('user'));
+            const user = JSON.parse(localStorage.getItem('user'));
 
             const response = await fetch(`/api/transactions`, {
                 headers: {
-                    autorizations: `Bearer ${user ? user.token : ""}`,
+                    Authorization: `Bearer ${user ? user.token : ""}`,
                 }
             })
 
+            if (!response.ok) {
+                console.log(response);
+                setError('error while fetching transactions...')
+                return [];
+            }
             const json = await response.json();
 
-            setTransactions(json);
+            console.log(json)
+            return json;
         } catch (error) {
             setError(error.error);
-            setTransactions([]);
+            return [];
         } finally {
             setIsloading(false);
         }
-    }
+    }, []);
+
+    return { getTransactions, isLoading, error };
 }
