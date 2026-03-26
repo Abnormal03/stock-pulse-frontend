@@ -219,7 +219,6 @@ export default function useDashboard() {
       if (!currentSymbol) {
         setCurrentSymbol(formatedPortfolio[0].symbol);
       }
-      setUserBalance(balance);
       return formatedPortfolio;
     } catch (error) {
       setPortError(error.message);

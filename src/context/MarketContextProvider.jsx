@@ -56,9 +56,19 @@ export const MarketContextProvider = ({ children }) => {
         setIsloading(true);
         setError(null);
         try {
-            const response = await fetch(`/api/market/${symbol}`);
-            const json = await response.json();
+            const user = JSON.parse(localStorage.getItem('user'));
+            const response = await fetch(`/api/market/${symbol}`, {
+                headers: {
+                    authorization: `Bearer ${user ? user.token : ""}`
+                }
+            });
 
+            if (!response.ok) {
+                setError('error while fetching stocks...');
+                return;
+            }
+
+            const json = await response.json();
             dispatch({ type: "LOAD_STOCKS", payload: json.searchResult })
         } catch (error) {
             setError('unable to get searched stock')

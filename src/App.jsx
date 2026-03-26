@@ -24,9 +24,10 @@ function App() {
   const { state } = useAuthContext();
   const [balance, setBalance] = useState(null);
   const dashboard = useDashboard();
-  const { userBalance } = dashboard;
+  const { userBalance, getPortfolio } = dashboard;
   useEffect(() => {
     setBalance(userBalance);
+    getPortfolio();
   }, [userBalance])
 
   if (!state.authIsReady) {
