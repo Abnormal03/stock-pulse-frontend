@@ -36,7 +36,7 @@ const Header = ({ balance }) => {
   }
 
   return (
-    <div className="bg-dark-bg sticky w-full md:px-5 ">
+    <div className="bg-dark-bg sticky z-10 w-full md:px-5 ">
       <div className="w-full rounded-3xl h-20 bg-secondary-bg flex items-center justify-between lg:pr-5">
         <img
           src={stockpulse}
