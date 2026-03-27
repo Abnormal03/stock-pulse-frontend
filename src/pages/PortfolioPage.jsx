@@ -5,7 +5,6 @@ import CurrentHoldings from '../components/portfolio/CurrentHoldings'
 const PortfolioPage = ({ useDashboard, userBalance }) => {
     const { getPortfolio, portfolioLoading, portError } = useDashboard;
     const [portfolio, setPortfolio] = useState([]);
-    const [profit, setProfit] = useState(0);
     const [totalEquity, setTotalEquity] = useState(0);
 
     const [openPosition, setOpenPosition] = useState(0);
@@ -17,7 +16,6 @@ const PortfolioPage = ({ useDashboard, userBalance }) => {
                 setPortfolio(portfolio);
             }
         }
-
         FetchPortfolio();
     }, [])
 
@@ -25,7 +23,6 @@ const PortfolioPage = ({ useDashboard, userBalance }) => {
         const updateDetails = () => {
             const PNL = portfolio.reduce((acc, stock) => acc + stock.PL, 0);
             setOpenPosition(portfolio.length);
-            setProfit(PNL);
             setTotalEquity(PNL + userBalance)
         }
         updateDetails();
@@ -33,7 +30,7 @@ const PortfolioPage = ({ useDashboard, userBalance }) => {
     return (
         <div className='text-text-main mt-2 lg:p-10 lg:min-h-180 h-fit flex flex-col items-center lg:block'>
             <TotalEquityHeader totalEquity={totalEquity} userBalance={userBalance} isLoading={portfolioLoading} openPosition={openPosition} />
-            <CurrentHoldings portfolio={portfolio} />
+            <CurrentHoldings portfolio={portfolio} portError={portError} isLoading={portfolioLoading} />
         </div>
     )
 }

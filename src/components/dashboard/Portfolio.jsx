@@ -3,7 +3,9 @@ import { IoAddCircleOutline } from "react-icons/io5";
 
 const Portfolio = ({ dashboard }) => {
   const [assets, setAssets] = useState(null);
-  const { getChart, getPortfolio, addWatch, portfolioTrigger, portfolioLoading, portError, setPortError } = dashboard;
+  const [displayError, setDisplayError] = useState(false);
+
+  const { setCurrentSymbol, getPortfolio, addWatch, portfolioTrigger, portfolioLoading, portError, setPortError } = dashboard;
 
   useEffect(() => {
     const fetchPortfolio = async () => {
@@ -17,6 +19,16 @@ const Portfolio = ({ dashboard }) => {
       setAssets([]);
     }
   }, [getPortfolio, portfolioTrigger]);
+
+  useEffect(() => {
+    let timeoutId;
+    if (portError) {
+      setDisplayError(true);
+      timeoutId = setTimeout(() => {
+        setDisplayError(false);
+      }, 5000);
+    }
+  }, [portError])
 
   const handleAdd = async (symbol) => {
     const added = addWatch(symbol);
@@ -39,14 +51,14 @@ const Portfolio = ({ dashboard }) => {
         <h1>TODAYS P&L</h1>
         <h1></h1>
       </div>
-      {assets && assets.length === 0 ? (
+      {!assets || assets.length === 0 ? (
         <div className="items-start justify-center flex">no assets...</div>
-      ) : (assets &&
+      ) : (
         assets.map((asset) => (
           <div
             key={asset.symbol}
             className="grid grid-cols-7 text-text-main bg-secondary-bg max-h-10 items-center justify-around w-full pl-15 py-1.5"
-            onClick={() => { getChart(asset.symbol) }}
+            onClick={() => { setCurrentSymbol(asset.symbol) }}
           >
             <p>{asset.symbol}</p>
             <p>{asset.quantity}</p>
@@ -58,9 +70,9 @@ const Portfolio = ({ dashboard }) => {
           </div>
         ))
       )}
-      {portError && (
+      {displayError && (
         <div className="absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
-          <p className=" text-red-600">Error: {portError}</p>
+          <p className=" text-red-600">failed to fetch assets data</p>
         </div>
       )}
     </div>

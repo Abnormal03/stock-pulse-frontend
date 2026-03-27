@@ -9,6 +9,7 @@ import Login from "./pages/loginPage";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import PortfolioPage from "./pages/PortfolioPage";
 import useDashboard from "./hooks/useDashboard";
+import Market from "./pages/Market";
 import Transactions from "./pages/Transactions";
 
 const RenderHeader = ({ state, userBalance }) => {
@@ -24,9 +25,10 @@ function App() {
   const { state } = useAuthContext();
   const [balance, setBalance] = useState(null);
   const dashboard = useDashboard();
-  const { userBalance } = dashboard;
+  const { userBalance, getPortfolio } = dashboard;
   useEffect(() => {
     setBalance(userBalance);
+    getPortfolio();
   }, [userBalance])
 
   if (!state.authIsReady) {
@@ -50,6 +52,8 @@ function App() {
           element={state.user ? <Dashboard useDashboard={dashboard} /> : <Navigate to={"/"} />}
         />
         <Route path="/portfolio" element={state.user ? <PortfolioPage userBalance={userBalance} useDashboard={dashboard} /> : <Navigate to={"/"} />} />
+
+        <Route path="/market" element={state.user ? <Market dashboard={dashboard} /> : <Navigate to={"/"} />} />
 
 
         <Route path="/transactions" element={state.user ? <Transactions /> : <Navigate to={"/"} />} />

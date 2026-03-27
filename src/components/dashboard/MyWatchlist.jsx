@@ -5,14 +5,26 @@ const MyWatchlist = ({ dashboard }) => {
   const { getMyWatchlist, myWatchlists, removeWatch, isLoading, error } = dashboard;
 
   const [success, setSuccess] = useState(null);
+  const [displayError, setDisplayError] = useState(false);
 
   useEffect(() => {
     const fetchWatchlist = async () => {
-      const MyWatchlist = await getMyWatchlist();
+      await getMyWatchlist();
     }
 
     fetchWatchlist();
   }, [])
+
+  useEffect(() => {
+    let timeoutId;
+    if (error) {
+      setDisplayError(true);
+      timeoutId = setTimeout(() => {
+        setDisplayError(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [error])
 
   useEffect(() => {
     const removeModal = async () => {
@@ -56,8 +68,8 @@ const MyWatchlist = ({ dashboard }) => {
       {success && <div className="absolute rounded-sm border-pulse-green right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
         <p className=" text-pulse-green">success: {success}</p>
       </div>}
-      {error && <div className="absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
-        <p className=" text-red-600">Error: {error}</p>
+      {displayError && <div className="absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
+        <p className=" text-red-600">failed to fetch watchlist</p>
       </div>}
     </div>
   )
