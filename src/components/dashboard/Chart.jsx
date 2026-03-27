@@ -6,7 +6,6 @@ const Chart = ({ dashboard }) => {
   const [displayError, setDisplayError] = useState(false);
 
   useEffect(() => {
-    console.log(currentSymbol)
     const symbolToFetch = currentSymbol;
 
     getChart(symbolToFetch);

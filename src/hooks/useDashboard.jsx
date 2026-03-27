@@ -67,7 +67,6 @@ export default function useDashboard() {
 
         if (formatedData.length > 0) {
           setCurrentPrice(formatedData[0].y[3]);
-          setCurrentSymbol(symbol);
         }
       } else {
         setError("Something went wrong while loading the chart.");

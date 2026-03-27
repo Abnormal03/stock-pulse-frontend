@@ -6,14 +6,20 @@ import { useNavigate } from 'react-router';
 const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
     const { state, getTopGainer, getSearchResult, isLoading, error } = useMarket();
     const [stockList, setStockList] = useState([]);
+    const [searchedStocks, setSearchedStocks] = useState([]);
+
     const { setCurrentSymbol } = dashboard;
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (state.marketStocks) {
+        if (state.marketStocks && !isSearching) {
             setStockList(state.marketStocks);
         }
-    }, [state.marketStocks]);
+        if (state.searchedStocks && isSearching) {
+            setSearchedStocks(state.searchedStocks);
+        }
+
+    }, [state.marketStocks, state.searchedStocks]);
 
     useEffect(() => {
         if (isSearching && searchTerm) {
@@ -39,6 +45,7 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
                 <p className=''></p>
             </div>}
             {(!isLoading && stockList.length === 0) ? <p className='text-text-dim font-bold text-2xl'>NO stocks found...</p> : (
+                !isSearching &&
                 stockList.map((stock, index) => (
                     <div key={index} onClick={() => { handleClick(stock.symbol) }} className={`grid grid-cols-5 md:grid-cols-6 bg-surface hover:bg-transparent cursor-default py-2 rounded-sm ${stock.change >= 0 ? "text-pulse-green" : "text-bear-red"}`}>
                         <p>{stock.symbol}</p>
@@ -56,8 +63,38 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
                 </div>
             )}
             {error && (
-                <div className="absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
+                <div className="z-10 absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
                     <p className=" text-red-600">Error: {error}</p>
+                </div>
+            )}
+
+
+            {isSearching && (
+                <div className='absolute inset-0 items-center justify-center bg-black/20 backdrop-blur-sm '>
+                    {searchedStocks.length > 0 && <div className='w-full grid grid-cols-5 bg-active-icon p-2 rounded-sm'>
+                        <p>Symbol</p>
+                        <p >name</p>
+                        <p>currency</p>
+                        <p>exchange</p>
+                        <p></p>
+                    </div>}
+                    {(!isLoading && searchedStocks.length === 0) ? <p className='text-text-dim font-bold text-2xl'>NO stocks found...</p> : (
+                        searchedStocks.map((stock, index) => (
+                            <div key={index} onClick={() => { handleClick(stock.symbol) }} className={`grid grid-cols-5 bg-surface hover:bg-transparent cursor-default py-2 rounded-sm text-text-dim/110`}>
+                                <p>{stock.symbol}</p>
+                                <p>{(stock.name)}</p>
+                                <p>{stock.currency}</p>
+                                <p>{stock.exchange}</p>
+                                <p className='flex items-center justify-end-safe mr-2 md:mr-0 md:justify-center md:text-2xl text-active-icon'><CiBookmarkPlus /></p>
+                            </div>
+                        ))
+                    )}
+
+                    {isLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                            <p>Loading...</p>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

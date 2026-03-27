@@ -4,7 +4,9 @@ import { MarketContext } from './marketContext'
 const Reducer = (state, action) => {
     switch (action.type) {
         case "LOAD_STOCKS":
-            return { marketStocks: action.payload };
+            return { ...state, marketStocks: action.payload };
+        case 'SEARCH_STOCKS':
+            return { ...state, searchedStocks: action.payload };
         default:
             return state;
     }
@@ -12,7 +14,8 @@ const Reducer = (state, action) => {
 
 export const MarketContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(Reducer, {
-        marketStocks: []
+        marketStocks: [],
+        searchedStocks: []
     });
 
 
@@ -57,7 +60,7 @@ export const MarketContextProvider = ({ children }) => {
         setError(null);
         try {
             const user = JSON.parse(localStorage.getItem('user'));
-            const response = await fetch(`/api/market/${symbol}`, {
+            const response = await fetch(`/api/market/search/${symbol}`, {
                 headers: {
                     authorization: `Bearer ${user ? user.token : ""}`
                 }
@@ -69,10 +72,10 @@ export const MarketContextProvider = ({ children }) => {
             }
 
             const json = await response.json();
-            dispatch({ type: "LOAD_STOCKS", payload: json.searchResult })
+            dispatch({ type: "SEARCH_STOCKS", payload: json.searchResult })
         } catch (error) {
             setError('unable to get searched stock')
-            dispatch({ type: 'LOAD_STOCKS', payload: [] });
+            dispatch({ type: 'SEARCH_STOCKS', payload: [] });
         } finally {
             setIsloading(false);
         }
