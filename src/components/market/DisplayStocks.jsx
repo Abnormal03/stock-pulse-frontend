@@ -8,7 +8,7 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
     const [stockList, setStockList] = useState([]);
     const [searchedStocks, setSearchedStocks] = useState([]);
 
-    const { setCurrentSymbol } = dashboard;
+    const { setCurrentSymbol, addWatch } = dashboard;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,6 +34,14 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
         setCurrentSymbol(symbol);
         navigate('/dashboard');
     }
+
+    const handleAddWatch = (symbol) => {
+        const added = addWatch(symbol);
+        if (!added) {
+            console.log('couldnt add to watchlist.')
+        }
+
+    }
     return (
         <div className='text-white text-center mt-5  p-5 lg:px-10 flex flex-col gap-5 relative'>
             {stockList.length > 0 && <div className='w-full grid grid-cols-5 lg:grid-cols-6 bg-active-icon p-2 rounded-sm'>
@@ -53,7 +61,7 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
                         <p className='hidden md:block'>{stock.name}</p>
                         <p>{(stock.change).toFixed(2)}%</p>
                         <p>{stock.exchange}</p>
-                        <p className='flex items-center justify-end-safe mr-2 md:mr-0 md:justify-center md:text-2xl text-active-icon'><CiBookmarkPlus /></p>
+                        <p onClick={(event) => { handleAddWatch(stock.symbol); event.stopPropagation(); }} className='flex items-center justify-end-safe mr-2 md:mr-0 md:justify-center md:text-2xl text-active-icon'><CiBookmarkPlus /></p>
                     </div>
                 ))
             )}
@@ -85,7 +93,7 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
                                 <p>{(stock.name)}</p>
                                 <p>{stock.currency}</p>
                                 <p>{stock.exchange}</p>
-                                <p className='flex items-center justify-end-safe mr-2 md:mr-0 md:justify-center md:text-2xl text-active-icon'><CiBookmarkPlus /></p>
+                                <button onClick={(event) => { handleAddWatch(stock.symbol); event.stopPropagation(); }} className='flex items-center justify-end-safe mr-2 md:mr-0 md:justify-center md:text-2xl text-active-icon'><CiBookmarkPlus /></button>
                             </div>
                         ))
                     )}

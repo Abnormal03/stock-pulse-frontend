@@ -2,9 +2,10 @@ import React, { useCallback, useRef, useState, useEffect, useContext } from "rea
 import { RiSpotifyFill } from "react-icons/ri";
 import { AuthContext } from "../context/authContext";
 import { useAuthContext } from "./useAuthContext";
+import useLogout from "./useLogout";
 
 export default function useDashboard() {
-  const { dispatch } = useAuthContext();
+  const { logout } = useLogout();
   const [isLoading, setIsLoading] = useState(null);
   const [error, setError] = useState(null);
   const [data, setData] = useState();
@@ -28,8 +29,8 @@ export default function useDashboard() {
   const [currentSymbol, setCurrentSymbol] = useState(null);
   useEffect(() => {
     if (error) {
-      if (error === "jwt expired") {
-        dispatch({ type: 'LOGOUT-USER' })
+      if (error === "session Expired!") {
+        logout();
       }
       const timer = setTimeout(() => setError(null), 5000);
       return () => clearTimeout(timer); //cleaning up the timeout...
@@ -54,6 +55,12 @@ export default function useDashboard() {
           symbol: symbol,
         }),
       });
+
+      if (response.status === 401) {
+        setError('session Expired!');
+        console.log(response)
+        return;
+      }
 
       const chartData = await response.json();
 
@@ -276,6 +283,7 @@ export default function useDashboard() {
       const json = await response.json();
 
       if (!response.ok) {
+        console.log(response)
         setPortError(json.error || "Failed to add to watchlist");
         return false;
       }

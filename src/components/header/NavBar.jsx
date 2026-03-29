@@ -12,7 +12,7 @@ const NavBar = () => {
   })
 
   return (
-    <nav className="text-text-main w-[90%] fixed bottom-5 lg:sticky flex lg:w-[40%] bg-dark-bg h-10 rounded-3xl lg:flex items-center justify-around ">
+    <nav className="text-text-main w-full fixed bottom-5 lg:sticky flex lg:w-[40%] bg-dark-bg h-10 rounded-3xl lg:flex items-center justify-around ">
       <NavLink style={style} className={"p-1.5 px-2.5 rounded-lg"} to={"/dashboard"}> <MdSpaceDashboard className='lg:hidden' />  <p className='hidden lg:block'>Dashboard</p> </NavLink>
       <NavLink style={style} className=" hover:bg-active-icon p-1.5 rounded-lg" to={"/portfolio"}>
         <p className='hidden lg:block'>Portofio</p>

@@ -75,11 +75,6 @@ const Trade = ({ dashboard }) => {
           />
         </div>
       </form>
-      {error && (
-        <div className="absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
-          <p className=" text-red-600">couldn't resolve the stock.</p>
-        </div>
-      )}
       {successMsg && (
         <div className="absolute rounded-sm border-pulse-green right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
           <p className=" text-pulse-green">success: {successMsg}</p>

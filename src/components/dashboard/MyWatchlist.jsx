@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { CiCircleRemove } from "react-icons/ci";
 
 const MyWatchlist = ({ dashboard }) => {
-  const { getMyWatchlist, myWatchlists, removeWatch, isLoading, error } = dashboard;
+  const { getMyWatchlist, myWatchlists, removeWatch, isLoading, error, setCurrentSymbol } = dashboard;
 
   const [success, setSuccess] = useState(null);
   const [displayError, setDisplayError] = useState(false);
@@ -58,7 +58,7 @@ const MyWatchlist = ({ dashboard }) => {
         <p></p>
       </div>
       {isLoading ? <p>loading...</p> : (myWatchlists.length === 0 ? "add stock to see them in watchlist" : myWatchlists.map(watch => (
-        <div key={watch._id} className={`w-full flex justify-between ${watch.change > 0 ? "text-pulse-green" : "text-bear-red"} hover:bg-dark-bg px-3 py-2 rounded-sm cursor-default`}>
+        <div key={watch._id} onClick={() => setCurrentSymbol(watch.symbol)} className={`w-full flex justify-between ${watch.change > 0 ? "text-pulse-green" : "text-bear-red"} hover:bg-dark-bg px-3 py-2 rounded-sm cursor-default`}>
           <p className="">{watch.symbol}</p>
           <p>{watch.currentPrice}</p>
           <p className=''>{watch.change}</p>
@@ -68,7 +68,7 @@ const MyWatchlist = ({ dashboard }) => {
       {success && <div className="absolute rounded-sm border-pulse-green right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
         <p className=" text-pulse-green">success: {success}</p>
       </div>}
-      {displayError && <div className="absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
+      {displayError && <div className="lg:hidden absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
         <p className=" text-red-600">failed to fetch watchlist</p>
       </div>}
     </div>

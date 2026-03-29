@@ -18,7 +18,6 @@ export const useTransactions = () => {
     const getTransactions = useCallback(async () => {
         setIsloading(true);
         setError(null)
-        console.log('starting fetching...')
         try {
             const user = JSON.parse(localStorage.getItem('user'));
 
