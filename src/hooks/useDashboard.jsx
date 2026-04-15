@@ -1,7 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect, useContext } from "react";
-import { RiSpotifyFill } from "react-icons/ri";
-import { AuthContext } from "../context/authContext";
-import { useAuthContext } from "./useAuthContext";
+import React, { useCallback, useState, useEffect } from "react";
 import useLogout from "./useLogout";
 
 export default function useDashboard() {
@@ -27,6 +24,8 @@ export default function useDashboard() {
   //setting current symbol and price for future use in the trade
   const [currentPrice, setCurrentPrice] = useState(null);
   const [currentSymbol, setCurrentSymbol] = useState(null);
+
+  const [portfolio, setportfolio] = useState([]);
   useEffect(() => {
     if (error) {
       if (error === "session Expired!") {
@@ -55,7 +54,6 @@ export default function useDashboard() {
           symbol: symbol,
         }),
       });
-
       if (response.status === 401) {
         setError('session Expired!');
         console.log(response)
@@ -63,6 +61,10 @@ export default function useDashboard() {
       }
 
       const chartData = await response.json();
+
+      if (response.status == 500) {
+        setCurrentSymbol(portfolio[0].symbol)
+      }
 
       if (response.ok && chartData.data) {
         const formatedData = chartData.data.map((item) => ({
@@ -81,6 +83,7 @@ export default function useDashboard() {
       }
     } catch (error) {
       setError(error.message);
+      console.log("failed");
     } finally {
       setChartLoading(false);
     }
@@ -121,11 +124,11 @@ export default function useDashboard() {
           return true;
         } else {
           setIsLoading(false);
-          setError(transaction.error || "something went wrong");
+          setError("something went wrong");
           return false;
         }
       } catch (error) {
-        setError(error.message);
+        setError("something went wrong");
       } finally {
         setIsLoading(false);
       }
@@ -194,7 +197,6 @@ export default function useDashboard() {
 
       const json = await response.json();
 
-
       if (!response.ok) {
         setPortError(response.error);
         return null;
@@ -225,6 +227,7 @@ export default function useDashboard() {
       if (!currentSymbol) {
         setCurrentSymbol(formatedPortfolio[0].symbol);
       }
+      setportfolio(formatedPortfolio);
       return formatedPortfolio;
     } catch (error) {
       setPortError(error.message);
@@ -266,8 +269,15 @@ export default function useDashboard() {
 
   const addWatch = useCallback(async (symbol) => {
     setIsLoading(true);
-    setPortError(false);
+    setError(null);
     try {
+
+      const supported = await checkSymbolSupported(symbol);
+      if (!supported) {
+        console.log(supported)
+        await setError('symbol not supported')
+        return false;
+      }
       const user = JSON.parse(localStorage.getItem('user'));
       const response = await fetch('/api/dashboard/watchlist/addwatch', {
         method: 'POST',
@@ -279,12 +289,15 @@ export default function useDashboard() {
           symbol
         })
       })
+      if (response.status !== 200) {
+        portError('couldnt add a stock to watchlist');
+        return false;
+      }
 
       const json = await response.json();
 
       if (!response.ok) {
-        console.log(response)
-        setPortError(json.error || "Failed to add to watchlist");
+        setError("Failed to add to watchlist");
         return false;
       }
       if (json.watch) {
@@ -294,7 +307,7 @@ export default function useDashboard() {
       return true;
 
     } catch (error) {
-      setPortError(error.message);
+      setError('something happened while adding to watchlist.');
       return false;
     } finally {
       setIsLoading(false);
@@ -328,24 +341,18 @@ export default function useDashboard() {
     }
   }, [])
 
+  const checkSymbolSupported = async (symbol) => {
+    try {
+      const response = await fetch(`https://financialmodelingprep.com/stable/quote-short?symbol=${symbol}&apikey=${import.meta.env.VITE_MARKET_API}`);
+      if (response.status === 200) {
+        return true;
+      }
+      return false;
+    } catch (error) {
 
-  // const getDetail = async (asset)=>{
-  //   try {
-  //     const priceRes = await fetch(`https://financialmodelingprep.com/stable/quote-short?symbol=${asset.symbol}&apikey=${import.meta.env.VITE_MARKET_API}`,);
-  //     const priceData = await priceRes.json();
-  //     const currentPrice = priceData[0]?.price || 0;
+    }
+  }
 
-  //     return {
-  //               ...asset,
-  //               currentPrice: currentPrice,
-  //               equityValue: currentPrice * asset.quantity,
-  //               PL: ((currentPrice - asset.avgPrice) * asset.quantity),
-  //             };
-
-  //   } catch (error) {
-  //     return { ...asset, currentPrice: 0, equityValue: 0, PL: 0 };
-  //   }
-  // }
 
   return {
     getChart,

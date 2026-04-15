@@ -8,7 +8,7 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
     const [stockList, setStockList] = useState([]);
     const [searchedStocks, setSearchedStocks] = useState([]);
 
-    const { setCurrentSymbol, addWatch } = dashboard;
+    const { setCurrentSymbol, addWatch, error: marketError } = dashboard;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,12 +35,12 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
         navigate('/dashboard');
     }
 
-    const handleAddWatch = (symbol) => {
-        const added = addWatch(symbol);
+    const handleAddWatch = async (symbol) => {
+        const added = await addWatch(symbol);
         if (!added) {
+            console.log(error)
             console.log('couldnt add to watchlist.')
         }
-
     }
     return (
         <div className='text-white text-center mt-5  p-5 lg:px-10 flex flex-col gap-5 relative'>
@@ -71,7 +71,7 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
                 </div>
             )}
             {error && (
-                <div className="z-10 absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
+                <div className="z-50 absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
                     <p className=" text-red-600">Error: {error}</p>
                 </div>
             )}
@@ -103,6 +103,11 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
                             <p>Loading...</p>
                         </div>
                     )}
+                </div>
+            )}
+            {marketError && (
+                <div className="z-50 absolute rounded-sm border-red-400 right-10 bottom-10 border px-10 py-3 bg-secondary-bg">
+                    <p className=" text-red-600">Error: {marketError}</p>
                 </div>
             )}
         </div>
