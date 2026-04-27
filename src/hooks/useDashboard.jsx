@@ -104,11 +104,12 @@ export default function useDashboard() {
       setIsLoading(true);
       setError(null);
       try {
+        const user = JSON.parse(localStorage.getItem("user"));
         const response = await fetch("/api/trade/buy", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token} || null`,
+            authorization: `Bearer ${user ? user.token : ""}`,
           },
           body: JSON.stringify({
             symbol: currentSymbol,
@@ -127,7 +128,7 @@ export default function useDashboard() {
           setError("something went wrong");
           return false;
         }
-      } catch (error) {
+      } catch (_err) {
         setError("something went wrong");
       } finally {
         setIsLoading(false);
@@ -203,28 +204,35 @@ export default function useDashboard() {
       }
       const { portfolio, balance } = json;
       setUserBalance(balance);
-      const formatedPortfolio = await Promise.all(
-        portfolio.map(async (asset) => {
-          try {
-            const priceRes = await fetch(
-              `https://financialmodelingprep.com/stable/quote-short?symbol=${asset.symbol}&apikey=${import.meta.env.VITE_MARKET_API}`,
-            );
-            const priceData = await priceRes.json();
-            const currentPrice = priceData[0]?.price || 0;
-
-            return {
-              ...asset,
-              currentPrice: currentPrice,
-              equityValue: currentPrice * asset.quantity,
-              PL: ((currentPrice - asset.avgPrice) * asset.quantity),
-            };
-          } catch (err) {
-            return { ...asset, currentPrice: 0, equityValue: 0, PL: 0 };
+      const symbols = portfolio.map((a) => a.symbol).filter(Boolean);
+      let priceBySymbol = new Map();
+      try {
+        if (symbols.length) {
+          const priceRes = await fetch(
+            `https://financialmodelingprep.com/stable/quote-short?symbol=${encodeURIComponent(
+              symbols.join(","),
+            )}&apikey=${import.meta.env.VITE_MARKET_API}`,
+          );
+          const priceData = await priceRes.json();
+          if (Array.isArray(priceData)) {
+            priceBySymbol = new Map(priceData.map((q) => [q.symbol, q.price]));
           }
-        }),
-      );
+        }
+      } catch (_err) {
+        priceBySymbol = new Map();
+      }
 
-      if (!currentSymbol) {
+      const formatedPortfolio = portfolio.map((asset) => {
+        const currentPrice = priceBySymbol.get(asset.symbol) ?? 0;
+        return {
+          ...asset,
+          currentPrice,
+          equityValue: currentPrice * asset.quantity,
+          PL: (currentPrice - Number(asset.avgPrice)) * asset.quantity,
+        };
+      });
+
+      if (!currentSymbol && formatedPortfolio.length > 0) {
         setCurrentSymbol(formatedPortfolio[0].symbol);
       }
       setportfolio(formatedPortfolio);
@@ -271,13 +279,8 @@ export default function useDashboard() {
     setIsLoading(true);
     setError(null);
     try {
-
-      const supported = await checkSymbolSupported(symbol);
-      if (!supported) {
-        console.log(supported)
-        await setError('symbol not supported')
-        return false;
-      }
+      // Don't block adding on a client-side quote check.
+      // The frontend may not have a market API key; backend will store the symbol regardless.
       const user = JSON.parse(localStorage.getItem('user'));
       const response = await fetch('/api/dashboard/watchlist/addwatch', {
         method: 'POST',
@@ -289,24 +292,18 @@ export default function useDashboard() {
           symbol
         })
       })
-      if (response.status !== 200) {
-        portError('couldnt add a stock to watchlist');
-        return false;
-      }
-
-      const json = await response.json();
-
+      const json = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError("Failed to add to watchlist");
+        setError(json.error || 'couldnt add a stock to watchlist');
         return false;
       }
       if (json.watch) {
         setMyWatchlists((prev) => [...prev, json.watch]);
-        getMyWatchlist();
+        await getMyWatchlist();
       }
       return true;
 
-    } catch (error) {
+    } catch (_err) {
       setError('something happened while adding to watchlist.');
       return false;
     } finally {
@@ -333,25 +330,15 @@ export default function useDashboard() {
       }
       setMyWatchlists((prev) => prev.filter(watch => watch._id !== _id));
       return json.removed;
-    } catch (error) {
-      setError(error.message);
+    } catch (_err) {
+      setError(_err.message);
       return false;
     } finally {
       setIsLoading(false);
     }
   }, [])
 
-  const checkSymbolSupported = async (symbol) => {
-    try {
-      const response = await fetch(`https://financialmodelingprep.com/stable/quote-short?symbol=${symbol}&apikey=${import.meta.env.VITE_MARKET_API}`);
-      if (response.status === 200) {
-        return true;
-      }
-      return false;
-    } catch (error) {
-
-    }
-  }
+  // NOTE: kept intentionally removed from the add-watch path.
 
 
   return {

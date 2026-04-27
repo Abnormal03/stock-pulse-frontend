@@ -9,7 +9,7 @@ const Transactions = () => {
     useEffect(() => {
         const fetchAndAttach = async () => {
             const TRs = await getTransactions();
-            setTransactions(TRs.reverse());
+            setTransactions(TRs);
         }
 
         fetchAndAttach();

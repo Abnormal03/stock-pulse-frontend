@@ -13,7 +13,7 @@ export const useTransactions = () => {
         }
 
         return () => clearTimeout(timeOutId);
-    })
+    }, [error])
 
     const getTransactions = useCallback(async () => {
         setIsloading(true);
@@ -35,7 +35,7 @@ export const useTransactions = () => {
 
             return json;
         } catch (error) {
-            setError(error.error);
+            setError(error.message);
             return [];
         } finally {
             setIsloading(false);

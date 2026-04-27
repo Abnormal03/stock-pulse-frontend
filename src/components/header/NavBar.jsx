@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 
 import { MdSpaceDashboard } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
-import { SiCardmarket } from "react-icons/si";
+import { MdShowChart } from "react-icons/md";
 import { GrTransaction } from "react-icons/gr";
 import { BsNewspaper } from "react-icons/bs";
 
@@ -21,7 +21,7 @@ const NavBar = () => {
       </NavLink>
       <NavLink style={style} className=" hover:bg-active-icon p-1.5 rounded-lg" to={"/market"}>
         <p className='hidden lg:block'>Market</p>
-        <SiCardmarket className='lg:hidden' />
+        <MdShowChart className='lg:hidden' />
       </NavLink>
 
       <NavLink style={style} className="hover:bg-active-icon p-1.5 rounded-lg" to={"/transactions"}>

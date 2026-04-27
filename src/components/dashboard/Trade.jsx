@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const Trade = ({ dashboard }) => {
   const [amount, setAmount] = useState(1);
-  const { addBuyTransaction, addSellTransaction, error, isLoading } = dashboard;
+  const { addBuyTransaction, addSellTransaction, isLoading } = dashboard;
   const [successMsg, setSuccessMsg] = useState(null);
 
   const handleChange = (event) => {

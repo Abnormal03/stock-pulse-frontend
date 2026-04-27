@@ -1,25 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useMarket } from '../../hooks/useMarket';
 import { CiBookmarkPlus } from "react-icons/ci";
 import { useNavigate } from 'react-router';
 
 const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
     const { state, getTopGainer, getSearchResult, isLoading, error } = useMarket();
-    const [stockList, setStockList] = useState([]);
-    const [searchedStocks, setSearchedStocks] = useState([]);
 
     const { setCurrentSymbol, addWatch, error: marketError } = dashboard;
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (state.marketStocks && !isSearching) {
-            setStockList(state.marketStocks);
-        }
-        if (state.searchedStocks && isSearching) {
-            setSearchedStocks(state.searchedStocks);
-        }
-
-    }, [state.marketStocks, state.searchedStocks]);
+    const stockList = isSearching ? [] : (state.marketStocks || []);
+    const searchedStocks = isSearching ? (state.searchedStocks || []) : [];
 
     useEffect(() => {
         if (isSearching && searchTerm) {
@@ -27,7 +18,7 @@ const DisplayStocks = ({ dashboard, isSearching, searchTerm }) => {
         } else {
             getTopGainer();
         }
-    }, [isSearching, searchTerm]);
+    }, [isSearching, searchTerm, getSearchResult, getTopGainer]);
 
     const handleClick = (symbol) => {
         if (!symbol) return;
