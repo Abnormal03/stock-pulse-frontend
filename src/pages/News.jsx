@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import { useNews } from '../hooks/useNews'
 import NewNews from '../components/news/NewNews';
 
-const News = () => {
+const News = ({ myWatchlists }) => {
 
     const { getNews, error, isLoading, news } = useNews();
 
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                await getNews();
+                await getNews(myWatchlists);
             } catch (error) {
                 console.log(error);
             }
