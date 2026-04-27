@@ -9,9 +9,7 @@ const Dashboard = ({ useDashboard }) => {
     <div className="bg-dark-bg h-fit flex flex-col lg:grid grid-cols-1 lg:grid-cols-3 p-5 gap-10">
       <Chart dashboard={dashboard} />
       <div>
-
         <Trade dashboard={dashboard} />
-        {/* the watchlist goes here... */}
         <MyWatchlist dashboard={dashboard} />
       </div>
       <Portfolio dashboard={dashboard} />

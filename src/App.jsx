@@ -11,6 +11,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import useDashboard from "./hooks/useDashboard";
 import Market from "./pages/Market";
 import Transactions from "./pages/Transactions";
+import News from "./pages/News";
 
 const RenderHeader = ({ state, userBalance }) => {
 
@@ -25,7 +26,7 @@ function App() {
   const { state } = useAuthContext();
   const [balance, setBalance] = useState(null);
   const dashboard = useDashboard();
-  const { userBalance, getPortfolio } = dashboard;
+  const { userBalance, getPortfolio, myWatchlists } = dashboard;
   useEffect(() => {
     setBalance(userBalance);
     getPortfolio();
@@ -57,6 +58,8 @@ function App() {
 
 
         <Route path="/transactions" element={state.user ? <Transactions /> : <Navigate to={"/"} />} />
+
+        <Route path="/news" element={state.user ? <News myWatchlists={myWatchlists} /> : <Navigate to={"/"} />} />
       </Routes>
     </BrowserRouter>
   );
