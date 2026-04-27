@@ -11,6 +11,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import useDashboard from "./hooks/useDashboard";
 import Market from "./pages/Market";
 import Transactions from "./pages/Transactions";
+import News from "./pages/News";
 
 const RenderHeader = ({ state, userBalance }) => {
 
@@ -57,6 +58,8 @@ function App() {
 
 
         <Route path="/transactions" element={state.user ? <Transactions /> : <Navigate to={"/"} />} />
+
+        <Route path="/news" element={state.user ? <News /> : <Navigate to={"/"} />} />
       </Routes>
     </BrowserRouter>
   );
