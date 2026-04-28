@@ -23,13 +23,13 @@ export const useSignup = () => {
         }),
       });
 
-      const user = await response.json();
 
       if (!response.ok) {
-        setError(user.error);
+        setError('something went wrong, please try again!');
         setIsLoading(false);
         return false;
       }
+      const user = await response.json();
       if (response.ok) {
         localStorage.setItem("user", JSON.stringify(user));
         dispatch({ type: "LOGIN-USER", payload: user });

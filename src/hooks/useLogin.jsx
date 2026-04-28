@@ -21,13 +21,13 @@ export const useLogin = () => {
         }),
       });
 
-      const user = await response.json();
 
       if (!response.ok) {
-        setError(user.error);
+        setError('something went wrong, please try again!');
         setIsLoading(false);
         return false;
       }
+      const user = await response.json();
       if (response.ok) {
         console.log(user);
         localStorage.setItem("user", JSON.stringify(user));
