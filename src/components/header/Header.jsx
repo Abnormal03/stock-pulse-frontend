@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import NavBar from "./NavBar";
 import stockpulse from "../../assets/Images/stock-pulse (2).png";
 import {
@@ -19,13 +19,7 @@ const Header = ({ balance }) => {
   const [showDetail, setShowDetail] = useState(false);
 
   const { username, email } = state.user || {};
-  const [userBalance, setUserBalance] = useState(null);
-
   if (!state.user) return null;
-
-  useEffect(() => {
-    setUserBalance(balance)
-  }, [balance])
 
   const handleLogout = () => {
     const confimed = window.confirm('do you want to logout?');
@@ -47,7 +41,7 @@ const Header = ({ balance }) => {
 
         <div className="flex gap-0 md:gap-2">
           <div className="bg-dark-bg hidden lg:flex text-white p-2 rounded-lg gap-2 items-center">
-            <p className="text-pulse-green">Balance: ${userBalance?.toFixed(2)}</p>
+            <p className="text-pulse-green">Balance: ${balance?.toFixed(2)}</p>
           </div>
           {/* account */}
           <div className="rounded-lg p-1.5 bg-secondary-bg flex items-center text-text-main gap-2 relative ">

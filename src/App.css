@@ -2,15 +2,19 @@
 
 @theme {
   /* This defines your custom colors for Tailwind v4 */
-  --color-dark-bg: #0b0e14;
-  --color-secondary-bg: #131B2E;
-  --color-surface: #1C2025;
-  --color-pulse-green: #00f5a0;
-  --color-bear-red: #ff3b3f;
-  --color-text-main: #f0f6fc;
-  --color-text-dim: #8b949e;
-  --color-floats: #213C51;
-  --color-active-icon: #4849DF;
+  /* Professional fintech palette: slate neutrals + single brand blue.
+     Keep green/red for P/L only. */
+  --color-dark-bg: #0b1220;         /* slate/ink */
+  --color-secondary-bg: #0f1b2d;    /* elevated panels */
+  --color-surface: #132238;         /* cards */
+  --color-text-main: #e6edf7;       /* high-contrast text */
+  --color-text-dim: #9aa9c1;        /* secondary text */
+
+  --color-active-icon: #2f6fed;     /* brand / active states */
+  --color-floats: #19314e;          /* subtle “floating” surfaces */
+
+  --color-pulse-green: #22c55e;     /* gains */
+  --color-bear-red: #ef4444;        /* losses */
 
   /* You can also add custom animations or gradients here */
   --background-image-glass-gradient: linear-gradient(135deg,

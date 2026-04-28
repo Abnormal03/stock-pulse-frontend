@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { MarketContext } from './marketContext'
 
 const Reducer = (state, action) => {
@@ -33,7 +33,7 @@ export const MarketContextProvider = ({ children }) => {
         return () => { clearTimeout(timeOutId) }
     }, [error])
 
-    const getTopGainer = async () => {
+    const getTopGainer = useCallback(async () => {
         setIsloading(true);
         setError(null);
         try {
@@ -47,15 +47,15 @@ export const MarketContextProvider = ({ children }) => {
             const json = await response.json();
             const topTen = json.symbols?.splice(0, 20);
             dispatch({ type: 'LOAD_STOCKS', payload: topTen });
-        } catch (error) {
+        } catch (_err) {
             setError('unable to get stock information...');
             dispatch({ type: 'LOAD_STOCKS', payload: [] });
         } finally {
             setIsloading(false);
         }
-    }
+    }, []);
 
-    const getSearchResult = async (symbol) => {
+    const getSearchResult = useCallback(async (symbol) => {
         setIsloading(true);
         setError(null);
         try {
@@ -73,16 +73,20 @@ export const MarketContextProvider = ({ children }) => {
 
             const json = await response.json();
             dispatch({ type: "SEARCH_STOCKS", payload: json.searchResult })
-        } catch (error) {
+        } catch (_err) {
             setError('unable to get searched stock')
             dispatch({ type: 'SEARCH_STOCKS', payload: [] });
         } finally {
             setIsloading(false);
         }
-    }
+    }, []);
 
+    const value = useMemo(
+        () => ({ state, dispatch, getTopGainer, getSearchResult, isLoading, error }),
+        [state, getTopGainer, getSearchResult, isLoading, error],
+    );
 
-    return (<MarketContext.Provider value={{ state, dispatch, getTopGainer, getSearchResult, isLoading, error }}>
+    return (<MarketContext.Provider value={value}>
         {children}
     </MarketContext.Provider>)
 

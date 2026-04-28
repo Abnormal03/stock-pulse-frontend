@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import Header from "./components/header/Header";
 import { useAuthContext } from "./hooks/useAuthContext";
@@ -24,20 +24,18 @@ const RenderHeader = ({ state, userBalance }) => {
 
 function App() {
   const { state } = useAuthContext();
-  const [balance, setBalance] = useState(null);
   const dashboard = useDashboard();
   const { userBalance, getPortfolio, myWatchlists } = dashboard;
   useEffect(() => {
-    setBalance(userBalance);
     getPortfolio();
-  }, [userBalance])
+  }, [getPortfolio])
 
   if (!state.authIsReady) {
     return <div className="loading-screen">Loading...</div>;
   }
   return (
     <BrowserRouter>
-      <RenderHeader state={state} userBalance={balance} />
+      <RenderHeader state={state} userBalance={userBalance} />
       <Routes>
         <Route
           path="/login"

@@ -28,6 +28,7 @@ const Portfolio = ({ dashboard }) => {
         setDisplayError(false);
       }, 5000);
     }
+    return () => clearTimeout(timeoutId);
   }, [portError])
 
   const handleAdd = async (symbol) => {

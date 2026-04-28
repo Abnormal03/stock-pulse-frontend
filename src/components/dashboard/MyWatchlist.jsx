@@ -13,7 +13,7 @@ const MyWatchlist = ({ dashboard }) => {
     }
 
     fetchWatchlist();
-  }, [])
+  }, [getMyWatchlist])
 
   useEffect(() => {
     let timeoutId;

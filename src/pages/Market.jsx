@@ -6,18 +6,6 @@ const Market = ({ dashboard }) => {
     const [isSearching, setIsSearching] = useState(false);
     const [searchTerm, setSearchTerm] = useState(null);
 
-    let timeOutId;
-    useEffect(() => {
-        timeOutId = setTimeout(() => {
-            handleSubmit();
-        }, 3000);
-        return () => clearTimeout(timeOutId)
-    }, [input])
-
-    const onChange = (event) => {
-        setinput(event.target.value)
-    }
-
     const handleSubmit = (event) => {
         if (event) {
             event.preventDefault();
@@ -29,7 +17,17 @@ const Market = ({ dashboard }) => {
         };
         setIsSearching(true);
         setSearchTerm(input)
-        clearTimeout(timeOutId);
+    }
+
+    useEffect(() => {
+        const id = setTimeout(() => {
+            handleSubmit();
+        }, 3000);
+        return () => clearTimeout(id)
+    }, [input])
+
+    const onChange = (event) => {
+        setinput(event.target.value)
     }
     return (
         <div>

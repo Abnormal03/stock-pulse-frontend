@@ -13,19 +13,12 @@ export const useNews = () => {
         return () => clearTimeout(timeId)
     }, [error])
 
-    const getNews = useCallback(async (myWatchlists) => {
+    const getNews = useCallback(async () => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const response = await fetch(`/api/news`, {
-                headers: {
-                    "Content-Type": "json/application"
-                },
-                body: {
-                    watches: myWatchlists
-                }
-            });
+            const response = await fetch(`/api/news`);
             if (!response.ok) {
                 console.log(response)
                 setError('error while fetching news!');

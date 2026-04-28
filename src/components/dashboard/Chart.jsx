@@ -8,6 +8,7 @@ const Chart = ({ dashboard }) => {
   useEffect(() => {
     const symbolToFetch = currentSymbol;
 
+    if (!symbolToFetch) return;
     getChart(symbolToFetch);
   }, [currentSymbol, getChart]);
 
@@ -34,7 +35,7 @@ const Chart = ({ dashboard }) => {
       foreColor: "#ffff",
     },
     title: {
-      text: `${currentSymbol} Stock Price`,
+      text: `${currentSymbol || "Select a symbol"} Stock Price`,
       align: "left",
     },
     xaxis: {
