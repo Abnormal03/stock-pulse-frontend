@@ -18,7 +18,7 @@ export const useNews = () => {
         setError(null);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news`);
+            const response = await fetch(`/api/news`);
             if (!response.ok) {
                 console.log(response)
                 setError('error while fetching news!');

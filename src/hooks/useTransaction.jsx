@@ -21,7 +21,7 @@ export const useTransactions = () => {
         try {
             const user = JSON.parse(localStorage.getItem('user'));
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions`, {
+            const response = await fetch(`/api/transactions`, {
                 headers: {
                     Authorization: `Bearer ${user ? user.token : ""}`,
                 }

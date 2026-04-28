@@ -1,6 +1,7 @@
 import stockpulse from "../../assets/Images/stock-pulse (2).png";
 
 const Header = () => {
+  console.log(`Vite url: ${import.meta.env.VITE_API_URL}`)
   return (
     <div className="bg-dark-bg max-h-20 w-full flex items-center justify-between px-20 absolute text-white">
       <img

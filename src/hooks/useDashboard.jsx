@@ -43,7 +43,7 @@ export default function useDashboard() {
 
     const user = JSON.parse(localStorage.getItem("user"));
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dashboard/chart`, {
+      const response = await fetch("/api/dashboard/chart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,7 +105,7 @@ export default function useDashboard() {
       setError(null);
       try {
         const user = JSON.parse(localStorage.getItem("user"));
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/trade/buy`, {
+        const response = await fetch("/api/trade/buy", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -149,7 +149,7 @@ export default function useDashboard() {
       }
       try {
         const user = JSON.parse(localStorage.getItem("user"));
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/trade/sell`, {
+        const response = await fetch("/api/trade/sell", {
           method: "POST",
           headers: {
             authorization: `Bearer ${user ? user.token : ""}`,
@@ -188,7 +188,7 @@ export default function useDashboard() {
     setPortError(null);
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dashboard/portfolio`, {
+      const response = await fetch("/api/dashboard/portfolio", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -250,7 +250,7 @@ export default function useDashboard() {
     setError(null)
     try {
       const user = JSON.parse(localStorage.getItem('user'));
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dashboard/watchlist`, {
+      const response = await fetch(`/api/dashboard/watchlist`, {
         headers: {
           'Content-Type': 'application/json',
           authorization: `Bearer ${user ? user.token : ""}`
@@ -282,7 +282,7 @@ export default function useDashboard() {
       // Don't block adding on a client-side quote check.
       // The frontend may not have a market API key; backend will store the symbol regardless.
       const user = JSON.parse(localStorage.getItem('user'));
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dashboard/watchlist/addwatch`, {
+      const response = await fetch('/api/dashboard/watchlist/addwatch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -316,7 +316,7 @@ export default function useDashboard() {
     setError(null);
     try {
       const user = JSON.parse(localStorage.getItem('user'));
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dashboard/watchlist/delete/${_id}`, {
+      const response = await fetch(`/api/dashboard/watchlist/delete/${_id}`, {
         method: 'DELETE',
         headers: {
           authorization: `Bearer ${user ? user.token : ""}`,

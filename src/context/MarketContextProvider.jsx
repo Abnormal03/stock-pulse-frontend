@@ -38,7 +38,7 @@ export const MarketContextProvider = ({ children }) => {
         setError(null);
         try {
             const user = JSON.parse(localStorage.getItem('user'));
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/market/toptraded`, {
+            const response = await fetch("/api/market/toptraded", {
                 headers: {
                     authorization: `Bearer ${user ? user.token : ""}`
                 }
@@ -60,7 +60,7 @@ export const MarketContextProvider = ({ children }) => {
         setError(null);
         try {
             const user = JSON.parse(localStorage.getItem('user'));
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/market/search/${symbol}`, {
+            const response = await fetch(`/api/market/search/${symbol}`, {
                 headers: {
                     authorization: `Bearer ${user ? user.token : ""}`
                 }
