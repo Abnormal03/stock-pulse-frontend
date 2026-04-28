@@ -41,15 +41,15 @@ const Portfolio = ({ dashboard }) => {
   if (portfolioLoading) return <div>Loading...</div>;
 
   return (
-    <div className="text-white w-full lg:min-h-50 scroll-auto shadow-sm shadow-active-icon rounded-2xl  invisible lg:visible self-end col-span-3 flex flex-col gap-1 overflow-hidden">
+    <div className="text-white w-full min-h-[200px] lg:min-h-50 scroll-auto shadow-sm shadow-active-icon rounded-2xl flex flex-col gap-1 overflow-hidden">
       {/*headings...*/}
-      <div className="grid grid-cols-7 text-text-dim bg-secondary-bg max-h-10 items-center justify-around w-full pl-15 py-1.5">
-        <h1>ASSETS</h1>
-        <h1>QUANTITY</h1>
-        <h1>EQUITY VALUE</h1>
-        <h1>AVG.BUY PRICE</h1>
-        <h1>CURRENT PRICE</h1>
-        <h1>TODAYS P&L</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 text-text-dim bg-secondary-bg max-h-10 items-center justify-around w-full pl-4 lg:pl-15 py-1.5 text-xs md:text-sm">
+        <h1 className="truncate">ASSETS</h1>
+        <h1 className="hidden md:block">QUANTITY</h1>
+        <h1 className="hidden lg:block">EQUITY VALUE</h1>
+        <h1 className="hidden lg:block">AVG.BUY PRICE</h1>
+        <h1 className="hidden md:block">CURRENT PRICE</h1>
+        <h1 className="hidden lg:block">TODAYS P&L</h1>
         <h1></h1>
       </div>
       {!assets || assets.length === 0 ? (
@@ -58,16 +58,16 @@ const Portfolio = ({ dashboard }) => {
         assets.map((asset) => (
           <div
             key={asset.symbol}
-            className="grid grid-cols-7 text-text-main bg-secondary-bg max-h-10 items-center justify-around w-full pl-15 py-1.5"
+            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 text-text-main bg-secondary-bg max-h-10 items-center justify-around w-full pl-4 lg:pl-15 py-1.5 text-xs md:text-sm"
             onClick={() => { setCurrentSymbol(asset.symbol) }}
           >
-            <p>{asset.symbol}</p>
-            <p>{asset.quantity}</p>
-            <p>{asset.equityValue?.toFixed(2)}</p>
-            <p>{asset.avgPrice}</p>
-            <p>{asset.currentPrice}</p>
-            <p className={asset.PL >= 0 ? "text-pulse-green" : "text-bear-red"}>{asset.PL?.toFixed(2)}</p>
-            <button onClick={(event) => { handleAdd(asset.symbol); event.stopPropagation(); }}><IoAddCircleOutline className="text-pulse-green text-2xl" /></button>
+            <p className="truncate font-semibold">{asset.symbol}</p>
+            <p className="hidden md:block">{asset.quantity}</p>
+            <p className="hidden lg:block">${asset.equityValue?.toFixed(2)}</p>
+            <p className="hidden lg:block">${asset.avgPrice}</p>
+            <p className="hidden md:block">${asset.currentPrice}</p>
+            <p className={`${asset.PL >= 0 ? "text-pulse-green" : "text-bear-red"} truncate`}>{asset.PL?.toFixed(2)}</p>
+            <button onClick={(event) => { handleAdd(asset.symbol); event.stopPropagation(); }}><IoAddCircleOutline className="text-pulse-green text-xl lg:text-2xl" /></button>
           </div>
         ))
       )}

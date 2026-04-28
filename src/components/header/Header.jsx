@@ -40,8 +40,8 @@ const Header = ({ balance }) => {
         <NavBar />
 
         <div className="flex gap-0 md:gap-2">
-          <div className="bg-dark-bg hidden lg:flex text-white p-2 rounded-lg gap-2 items-center">
-            <p className="text-pulse-green">Balance: ${balance?.toFixed(2)}</p>
+          <div className="bg-dark-bg flex text-white p-2 rounded-lg gap-2 items-center text-xs md:text-sm">
+            <p className="text-pulse-green">${balance?.toFixed(2)}</p>
           </div>
           {/* account */}
           <div className="rounded-lg p-1.5 bg-secondary-bg flex items-center text-text-main gap-2 relative ">

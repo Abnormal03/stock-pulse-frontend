@@ -1,17 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import "./App.css";
 import Header from "./components/header/Header";
 import { useAuthContext } from "./hooks/useAuthContext";
-import Dashboard from "./pages/Dashboard";
-import HomePage from "./pages/HomePage";
-import SignupPage from "./pages/SignupPage";
-import Login from "./pages/loginPage";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import PortfolioPage from "./pages/PortfolioPage";
 import useDashboard from "./hooks/useDashboard";
-import Market from "./pages/Market";
-import Transactions from "./pages/Transactions";
-import News from "./pages/News";
+
+// Lazy load page components
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const SignupPage = lazy(() => import("./pages/SignupPage"));
+const Login = lazy(() => import("./pages/loginPage"));
+const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
+const Market = lazy(() => import("./pages/Market"));
+const Transactions = lazy(() => import("./pages/Transactions"));
+const News = lazy(() => import("./pages/News"));
+
+const LoadingFallback = () => <div className="loading-screen">Loading...</div>;
 
 const RenderHeader = ({ state, userBalance }) => {
 
@@ -36,29 +40,31 @@ function App() {
   return (
     <BrowserRouter>
       <RenderHeader state={state} userBalance={userBalance} />
-      <Routes>
-        <Route
-          path="/login"
-          element={!state.user ? <Login /> : <Navigate to="/dashboard" />}
-        />
-        <Route
-          path="/signup"
-          element={!state.user ? <SignupPage /> : <Navigate to="/dashboard" />}
-        />
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/dashboard"
-          element={state.user ? <Dashboard useDashboard={dashboard} /> : <Navigate to={"/"} />}
-        />
-        <Route path="/portfolio" element={state.user ? <PortfolioPage userBalance={userBalance} useDashboard={dashboard} /> : <Navigate to={"/"} />} />
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          <Route
+            path="/login"
+            element={!state.user ? <Login /> : <Navigate to="/dashboard" />}
+          />
+          <Route
+            path="/signup"
+            element={!state.user ? <SignupPage /> : <Navigate to="/dashboard" />}
+          />
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/dashboard"
+            element={state.user ? <Dashboard useDashboard={dashboard} /> : <Navigate to={"/"} />}
+          />
+          <Route path="/portfolio" element={state.user ? <PortfolioPage userBalance={userBalance} useDashboard={dashboard} /> : <Navigate to={"/"} />} />
 
-        <Route path="/market" element={state.user ? <Market dashboard={dashboard} /> : <Navigate to={"/"} />} />
+          <Route path="/market" element={state.user ? <Market dashboard={dashboard} /> : <Navigate to={"/"} />} />
 
 
-        <Route path="/transactions" element={state.user ? <Transactions /> : <Navigate to={"/"} />} />
+          <Route path="/transactions" element={state.user ? <Transactions /> : <Navigate to={"/"} />} />
 
-        <Route path="/news" element={state.user ? <News myWatchlists={myWatchlists} /> : <Navigate to={"/"} />} />
-      </Routes>
+          <Route path="/news" element={state.user ? <News myWatchlists={myWatchlists} /> : <Navigate to={"/"} />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

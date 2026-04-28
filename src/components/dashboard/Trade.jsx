@@ -37,10 +37,10 @@ const Trade = ({ dashboard }) => {
   }, [successMsg]);
 
   return (
-    <div className="text-text-main lg:max-h-fit pb-5 flex flex-col items-center gap-3 rounded-3xl shadow-sm shadow-active-icon">
-      <h1 className="text-3xl ">Trade</h1>
-      <form className="flex flex-col gap-3 w-full px-10 items-center">
-        <label htmlFor="amount" className="self-start ml-13">
+    <div className="text-text-main lg:max-h-fit pb-5 flex flex-col items-center gap-3 rounded-3xl shadow-sm shadow-active-icon p-4">
+      <h1 className="text-2xl lg:text-3xl">Trade</h1>
+      <form className="flex flex-col gap-3 w-full px-2 lg:px-10 items-center">
+        <label htmlFor="amount" className="self-start ml-2 lg:ml-13">
           Amount:{"(buy or sell)"}
         </label>
         <input
@@ -49,27 +49,27 @@ const Trade = ({ dashboard }) => {
           id="amount"
           name="amount"
           required
-          className="border rounded-sm w-[80%] h-10 text-center border-amber-100 focus:outline-none"
+          className="border rounded-sm w-full lg:w-[80%] h-10 text-center border-amber-100 focus:outline-none"
           onChange={handleChange}
           value={amount}
         />
 
-        <label htmlFor="" className="self-start ml-13">
+        <label htmlFor="" className="self-start ml-2 lg:ml-13">
           Available: {"0.0"}
         </label>
 
-        <div className="flex  px-10 gap-5 w-full content-around items-center justify-around">
+        <div className="flex px-2 lg:px-10 gap-3 lg:gap-5 w-full content-around items-center justify-around">
           <input
             type="button"
             value="Buy"
-            className="px-10 py-2 rounded-lg bg-pulse-green text-black"
+            className="px-4 lg:px-10 py-2 rounded-lg bg-pulse-green text-black flex-1 lg:flex-none"
             onClick={handleBuy}
             disabled={isLoading}
           />
           <input
             type="button"
             value="Sell"
-            className="px-10 py-2 rounded-lg bg-bear-red text-black"
+            className="px-4 lg:px-10 py-2 rounded-lg bg-bear-red text-black flex-1 lg:flex-none"
             onClick={handleSell}
             disabled={isLoading}
           />
